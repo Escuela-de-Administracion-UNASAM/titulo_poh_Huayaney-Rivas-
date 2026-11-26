@@ -1,0 +1,2393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador y Generador de Diseño Metodológico y Matriz de Consistencia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  if (window.tailwind) {
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          },
+          colors: {
+            // Paleta académica global: azul marino (principal), azul acero, verde salvia, dorado sobrio y vino
+            ink:     { 50:'#F6F7F9',100:'#EDEFF3',200:'#DADFE7',300:'#B8C0CD',400:'#8B95A7',500:'#667085',600:'#4C5567',700:'#394152',800:'#262C3A',900:'#171B25' },
+            indigo:  { 50:'rgb(var(--p50) / <alpha-value>)',100:'rgb(var(--p100) / <alpha-value>)',200:'rgb(var(--p200) / <alpha-value>)',300:'rgb(var(--p300) / <alpha-value>)',400:'rgb(var(--p400) / <alpha-value>)',500:'rgb(var(--p500) / <alpha-value>)',600:'rgb(var(--p600) / <alpha-value>)',700:'rgb(var(--p700) / <alpha-value>)',800:'rgb(var(--p800) / <alpha-value>)',900:'rgb(var(--p900) / <alpha-value>)',950:'rgb(var(--p950) / <alpha-value>)' },
+            blue:    { 50:'rgb(var(--p50) / <alpha-value>)',100:'rgb(var(--p100) / <alpha-value>)',200:'rgb(var(--p200) / <alpha-value>)',300:'rgb(var(--p300) / <alpha-value>)',400:'rgb(var(--p400) / <alpha-value>)',500:'rgb(var(--p500) / <alpha-value>)',600:'rgb(var(--p600) / <alpha-value>)',700:'rgb(var(--p700) / <alpha-value>)',800:'rgb(var(--p800) / <alpha-value>)',900:'rgb(var(--p900) / <alpha-value>)',950:'rgb(var(--p950) / <alpha-value>)' },
+            sky:     { 50:'rgb(var(--p50) / <alpha-value>)',100:'rgb(var(--p100) / <alpha-value>)',200:'rgb(var(--p200) / <alpha-value>)',300:'rgb(var(--p300) / <alpha-value>)',400:'rgb(var(--p400) / <alpha-value>)',500:'rgb(var(--p500) / <alpha-value>)',600:'rgb(var(--p600) / <alpha-value>)',700:'rgb(var(--p700) / <alpha-value>)',800:'rgb(var(--p800) / <alpha-value>)',900:'rgb(var(--p900) / <alpha-value>)',950:'rgb(var(--p950) / <alpha-value>)' },
+            emerald: { 50:'#EFF6F2',100:'#DCEDE3',200:'#B9DBC7',300:'#8CC2A3',400:'#5FA27E',500:'#438663',600:'#356D50',700:'#2B5841',800:'#224634',900:'#1A3628' },
+            teal:    { 500:'#3E7F78',600:'#316862' },
+            amber:   { 50:'#FBF7EE',100:'#F5EBD3',200:'#EAD7A9',300:'#DCBD76',400:'#C9A24F',500:'#B08A3A',600:'#8F6F2E',700:'#735827',800:'#5C4621',900:'#47371C' },
+            yellow:  { 100:'#F8EFCF',300:'#E9CF7A',600:'#A9852C',700:'#8A6A22',800:'#6B521C' },
+            rose:    { 50:'#F9F0F1',200:'#E8C6CB',400:'#B8707C',500:'#9B4A58',700:'#742F3C',900:'#4E1F28' },
+            orange:  { 500:'#A8643A' },
+            red:     { 50:'#FBF1F1',100:'#F5DCDC',200:'#EBBDBD',300:'#DD9595',400:'#C96A6A',500:'#B04848',600:'#963B3B',700:'#7B3131',800:'#632828' }
+          },
+          boxShadow: { soft: '0 1px 2px rgba(22,26,43,.04), 0 8px 24px -12px rgba(22,26,43,.18)' }
+        }
+      }
+    };
+  }
+</script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js" onerror="var s=document.createElement('script');s.src='https://unpkg.com/docx@9.7.1/dist/index.iife.js';document.head.appendChild(s);"></script>
+<style>
+  body { font-family: 'Inter', system-ui, sans-serif; }
+  .font-display { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; }
+  .field { width:100%; border:1.5px solid #d6dae8; border-radius:.7rem; padding:.6rem .8rem; font-size:.9rem; background:#fff; transition:border-color .15s, box-shadow .15s; outline:none; }
+  .field:focus { border-color:rgb(var(--p600)); box-shadow:0 0 0 4px rgb(var(--p600) / .14); }
+  .field.has-error { border-color:#B04848 !important; box-shadow:0 0 0 4px rgba(176,72,72,.12); background:#FCF5F5; }
+  .sel { border:1.5px solid #d6dae8; border-radius:.7rem; padding:.55rem .4rem; font-size:.85rem; background:#f6f7fb; outline:none; }
+  .sel:focus { border-color:rgb(var(--p600)); }
+  .err-msg { color:#963B3B; font-size:.75rem; margin-top:.3rem; display:flex; gap:.3rem; align-items:center; font-weight:500; }
+  .group-error { outline:2px solid #B04848; outline-offset:4px; border-radius:1rem; }
+  .choice { cursor:pointer; transition: all .15s; }
+  .choice:hover { transform: translateY(-1px); }
+  .scroll-thin::-webkit-scrollbar { width:8px; height:8px; }
+  .scroll-thin::-webkit-scrollbar-thumb { background:#d6dae8; border-radius:8px; }
+  :root { --apa:#000000; --p50:242 244 247; --p100:228 232 237; --p200:200 208 220; --p300:162 176 195; --p400:116 137 165; --p500:76 103 139; --p600:44 76 119; --p700:36 62 98; --p800:29 51 80; --p900:23 40 62; --p950:17 29 45; }
+  .matrix { border-bottom:1.5px solid var(--apa); }
+  .matrix th, .matrix td { border:none; padding:.55rem .7rem; vertical-align:top; font-size:.8rem; line-height:1.45; }
+  .matrix th { background:transparent; color:var(--apa); font-weight:700; text-align:center; font-size:.8rem; border-top:1.5px solid var(--apa); border-bottom:1px solid var(--apa); }
+  .apa-cap { font-family:'Times New Roman', Georgia, serif; color:#0f172a; }
+  .matrix .code { display:inline-block; font-weight:700; color:rgb(var(--p700)); background:rgb(var(--p100)); border-radius:.35rem; padding:0 .35rem; margin-right:.3rem; font-size:.7rem; }
+  .matrix .h0 { color:#64748b; font-size:.74rem; margin-top:.3rem; display:block; }
+  .sheet { width:794px; min-height:1123px; background:#fff; padding:80px 84px; font-family:'Times New Roman', Times, serif; font-size:16px; color:#000; box-shadow:0 2px 6px rgba(22,26,43,.08), 0 18px 40px -18px rgba(22,26,43,.35); position:relative; }
+  .sheet.sheet-land { width:1123px; min-height:794px; padding:70px 76px; }
+  .sheet .sh-page { position:absolute; top:34px; right:60px; font-size:14px; }
+  .sheet .sh-title { font-weight:bold; font-size:17px; line-height:1.6; color:var(--apa); }
+  .sheet .sh-h1 { font-weight:bold; text-align:center; line-height:2; color:var(--apa); margin:6px 0 2px; }
+  .sheet .sh-h2 { font-weight:bold; line-height:2; color:var(--apa); margin-top:4px; }
+  .sheet .sh-p { text-indent:48px; line-height:2; margin:0; text-align:left; }
+  .sheet .sh-ref { padding-left:48px; text-indent:-48px; line-height:2; margin:0; }
+  .sheet .sh-note { font-family:Inter, sans-serif; font-size:13px; color:#8a93b3; text-align:center; margin-top:18px; }
+  .sheet .apa-label { line-height:2; margin:0; }
+  .cg-in { animation: cgin .45s cubic-bezier(.2,.9,.3,1.2); }
+  @keyframes cgin { from { opacity:0; transform: translateY(18px) scale(.97);} to { opacity:1; transform:none;} }
+  .cg-bar { animation: cgbar 12s linear forwards; }
+  @keyframes cgbar { from { width:100%; } to { width:0%; } }
+  .cg-glow { animation: cgglow 2.4s ease-in-out infinite; }
+  @keyframes cgglow { 0%,100% { box-shadow:0 0 0 0 rgba(176,138,58,.45);} 50% { box-shadow:0 0 0 9px rgba(176,138,58,0);} }
+  body.v-steps #rightPane { display:none; }
+  body.v-steps #mainGrid { grid-template-columns:minmax(0,1fr) !important; max-width:1120px; }
+  #sheetCard { display:none !important; }
+  body.v-final #leftPane, body.v-final #sheetCard, body.v-final #titleCard { display:none; }
+  body.v-final #finalBar { order:0; } body.v-final #results { order:1; } body.v-final #semCard { order:2; } body.v-final #authorCard { order:3; }
+  body.v-final #mainGrid { grid-template-columns:minmax(0,1fr) !important; max-width:1180px; }
+  .fade-in { animation: fade .35s ease; }
+  @keyframes fade { from { opacity:0; transform: translateY(6px);} to {opacity:1; transform:none;} }
+  .toast-enter { animation: toast .25s ease; }
+  @keyframes toast { from { opacity:0; transform: translate(-50%, -10px);} to { opacity:1; transform: translate(-50%,0);} }
+  @media print {
+    @page { size: A4 landscape; margin: 12mm; }
+    body { background:#fff !important; }
+    .no-print, #leftPane, #appHeader, #toast, #alertBox { display:none !important; }
+    #mainGrid { display:block !important; }
+    #rightPane { width:100% !important; position:static !important; max-height:none !important; overflow:visible !important; }
+    .print-break { page-break-before: always; }
+    .shadow-soft { box-shadow:none !important; }
+    svg * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body class="v-steps step-1 bg-ink-50 text-ink-800 min-h-screen flex flex-col">
+
+<!-- Felicitaciones -->
+<div id="congrats" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-[70] w-[min(92vw,430px)] no-print"></div>
+<aside id="palettePanel" class="no-print fixed right-0 top-1/2 -translate-y-1/2 z-40 flex items-center"></aside>
+
+<!-- Confirmación -->
+<div id="confirmBox" class="hidden fixed inset-0 z-[80] bg-ink-900/40 backdrop-blur-sm grid place-items-center p-4"></div>
+
+<!-- Toast -->
+<div id="toast" class="hidden fixed top-5 left-1/2 -translate-x-1/2 z-[60]"></div>
+
+<!-- Header -->
+<header id="appHeader" class="bg-white/90 backdrop-blur border-b border-ink-200 sticky top-0 z-40">
+  <div class="max-w-[1500px] mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+    <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-500 grid place-items-center text-white shadow-soft shrink-0">
+      <i data-lucide="flask-conical" class="w-5 h-5"></i>
+    </div>
+    <div class="min-w-0">
+      <h1 class="font-display font-extrabold text-ink-900 text-base sm:text-lg leading-tight truncate">Simulador y Generador de Diseño Metodológico</h1>
+      <p class="text-xs text-ink-500 truncate">Matriz de consistencia · Enfoque cuantitativo · Sustento en APA 7.ª edición</p>
+    </div>
+    <div class="ml-auto flex items-center gap-2 no-print">
+      <button type="button" id="btnExample" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border border-ink-200 hover:bg-ink-50 text-ink-700">
+        <i data-lucide="wand-sparkles" class="w-4 h-4"></i> Cargar ejemplo
+      </button>
+      <button type="button" id="btnReset" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border border-ink-200 hover:bg-ink-50 text-ink-700">
+        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> <span class="hidden sm:inline">Reiniciar</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+
+<main id="mainGrid" class="max-w-[1500px] w-full mx-auto px-4 sm:px-6 lg:pr-14 py-5 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-6 flex-1">
+
+  <!-- ============ LEFT: FORM ============ -->
+  <section id="leftPane" class="flex flex-col bg-white rounded-2xl shadow-soft border border-ink-200">
+    <!-- Stepper -->
+    <nav id="stepper" class="sticky top-[64px] z-30 bg-white/95 backdrop-blur rounded-t-2xl px-4 sm:px-8 pt-5 pb-4 border-b border-ink-100"></nav>
+    <div id="alertBox" class="hidden px-4 sm:px-5 pt-3"></div>
+    <!-- Step body -->
+    <div id="stepBody" class="px-4 sm:px-8 py-6 flex-1"></div>
+    <!-- Nav -->
+    <div class="sticky bottom-0 z-30 rounded-b-2xl px-4 sm:px-8 py-3 border-t border-ink-100 bg-white/95 backdrop-blur flex items-center gap-2">
+      <button type="button" id="btnPrev" class="inline-flex items-center gap-1 text-sm font-semibold px-3 py-2 rounded-lg text-ink-600 hover:bg-white border border-transparent hover:border-ink-200 disabled:opacity-40 disabled:pointer-events-none">
+        <i data-lucide="chevron-left" class="w-4 h-4"></i> Anterior
+      </button>
+      <button type="button" id="btnNext" class="inline-flex items-center gap-1 text-sm font-semibold px-3 py-2 rounded-lg bg-white border border-ink-200 hover:border-indigo-400 text-ink-800">
+        Siguiente <i data-lucide="chevron-right" class="w-4 h-4"></i>
+      </button>
+      <button type="button" id="btnFinal" class="hidden inline-flex items-center gap-1 text-sm font-semibold px-3 py-2 rounded-lg text-indigo-700 hover:bg-indigo-50"><i data-lucide="book-check" class="w-4 h-4"></i> Ver documento</button>
+      <button type="button" id="btnGenerate" class="ml-auto inline-flex items-center gap-2 text-sm font-bold px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white shadow-soft">
+        <i data-lucide="sparkles" class="w-4 h-4"></i> Generar proyecto
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ RIGHT: PREVIEW / RESULTS ============ -->
+  <section id="rightPane" class="flex flex-col gap-5 min-w-0">
+    <!-- Barra de la vista final -->
+    <div id="finalBar" class="no-print rounded-2xl bg-gradient-to-r from-indigo-900 to-indigo-700 text-white px-5 py-4 flex flex-wrap items-center gap-3 shadow-soft">
+      <span class="h-10 w-10 rounded-xl bg-white/10 border border-white/20 grid place-items-center"><i data-lucide="book-check" class="w-5 h-5"></i></span>
+      <div><p class="text-[10.5px] font-bold uppercase tracking-[.14em] text-amber-200">Proceso completado</p><p class="font-display font-extrabold text-lg leading-tight">Documento final consolidado</p></div>
+      <button type="button" id="btnEdit" class="ml-auto inline-flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20"><i data-lucide="pencil" class="w-4 h-4"></i>Volver a editar</button>
+    </div>
+
+    <!-- Sheet preview -->
+    <div id="sheetCard" class="bg-white rounded-2xl shadow-soft border border-ink-200 p-4 sm:p-5">
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        <i data-lucide="file-text" class="w-4 h-4 text-indigo-600"></i>
+        <h2 class="font-display font-bold text-ink-900 text-sm">Vista previa de la hoja</h2>
+        <span id="sheetStep" class="ml-auto text-[11px] font-semibold px-2.5 py-1 rounded-full bg-ink-100 text-ink-600"></span>
+      </div>
+      <div id="sheetWrap" class="rounded-xl bg-gradient-to-b from-ink-100/80 to-ink-50 border border-ink-100 p-4 max-h-[78vh] overflow-y-auto scroll-thin">
+        <div id="sheetBox" class="mx-auto overflow-hidden"><div id="sheetScaler" style="transform-origin:top left"><div id="sheet" class="sheet"></div></div></div>
+      </div>
+    </div>
+
+    <!-- Author support card -->
+    <div id="authorCard"></div>
+
+    <!-- Live title -->
+    <div id="titleCard" class="bg-white rounded-2xl shadow-soft border border-ink-200 p-4 sm:p-5">
+      <div class="flex items-center gap-2 mb-2">
+        <i data-lucide="heading" class="w-4 h-4 text-indigo-600"></i>
+        <h2 class="font-display font-bold text-ink-900 text-sm">Tituladora · vista en tiempo real</h2>
+        <span id="titleCounter" class="ml-auto text-xs font-bold px-2.5 py-1 rounded-full hidden"></span>
+      </div>
+      <p id="liveTitle" class="font-display text-ink-900 text-[15px] sm:text-base font-semibold leading-snug min-h-[1.5rem]"></p>
+      <p id="titleHint" class="text-xs text-ink-500 mt-2"></p>
+    </div>
+
+    <!-- SEM diagram -->
+    <div id="semCard" class="bg-white rounded-2xl shadow-soft border border-ink-200 p-4 sm:p-5">
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        <i data-lucide="network" class="w-4 h-4 text-indigo-600"></i>
+        <h2 class="font-display font-bold text-ink-900 text-sm">Simulación gráfica · modelo estructural (estilo SmartPLS)</h2>
+        <div class="ml-auto flex items-center gap-3 text-[11px] text-ink-500">
+          <span class="inline-flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-blue-600 inline-block"></span>Variable</span>
+          <span class="inline-flex items-center gap-1"><span class="w-4 h-2.5 rounded-sm bg-yellow-300 border border-yellow-600 inline-block"></span>Dimensión</span>
+        </div>
+      </div>
+      <div id="semWrap" class="w-full overflow-x-auto scroll-thin rounded-xl bg-gradient-to-b from-slate-50 to-white border border-ink-100"></div>
+      <p id="semCaption" class="text-xs text-ink-500 mt-2"></p>
+    </div>
+
+    <!-- Results -->
+    <div id="results"></div>
+  </section>
+</main>
+
+<footer class="border-t border-ink-200 bg-white mt-4">
+  <div class="max-w-[1500px] mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
+    <p class="text-xs text-ink-500">Herramienta académica de apoyo. Revise siempre la redacción final con su asesor(a).</p>
+    <p class="text-sm font-display font-bold text-ink-900">Créditos: Huayaney Rivas Yhumara</p>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   1. BASE BIBLIOGRÁFICA (tres documentos adjuntos)
+   Las páginas corresponden a la numeración impresa de cada libro.
+   ========================================================= */
+const AUTHORS = {
+  sampieri: {
+    id: 'sampieri',
+    initials: 'HS',
+    gradient: 'from-rose-500 to-orange-500',
+    ring: 'ring-rose-400',
+    soft: 'bg-rose-50 text-rose-700',
+    names: 'Roberto Hernández-Sampieri y Christian Paulina Mendoza Torres',
+    shortCite: 'Hernández-Sampieri y Mendoza',
+    year: 2018,
+    book: 'Metodología de la investigación: las rutas cuantitativa, cualitativa y mixta',
+    publisher: 'McGraw-Hill Interamericana Editores',
+    apa: 'Hernández-Sampieri, R., y Mendoza Torres, C. P. (2018). <i>Metodología de la investigación: Las rutas cuantitativa, cualitativa y mixta</i>. McGraw-Hill Interamericana Editores.',
+    apaPlain: 'Hernández-Sampieri, R., y Mendoza Torres, C. P. (2018). Metodología de la investigación: Las rutas cuantitativa, cualitativa y mixta. McGraw-Hill Interamericana Editores.',
+    summary: 'Concibe la investigación cuantitativa como una "ruta" secuencial y probatoria: planteamiento, marco teórico, alcance, hipótesis, diseño, muestra, recolección y análisis estadístico.',
+    keys: ['Ruta cuantitativa', 'Alcance', 'Hi · H0 · Ha', 'Transeccional correlacional-causal'],
+    labels: { nivel: 'Alcance de la investigación', pg: 'Pregunta general de investigación', pe: 'Preguntas específicas', og: 'Objetivo general', oe: 'Objetivos específicos', hg: 'Hipótesis general', he: 'Hipótesis específicas', codeP: 'PG', codePE: 'PE', codeO: 'OG', codeOE: 'OE', codeH: 'Hi', codeHE: 'Hi', codeH0: 'H0' },
+    rules: [
+      ['Problema', 'Se formula como pregunta, de forma clara y sin ambigüedad (cap. 3, p. 41).'],
+      ['Objetivos', 'Inician con verbos como describir, determinar, analizar o relacionar; deben ser concretos y medibles (cap. 3, p. 42).'],
+      ['Hipótesis', 'Se plantean la hipótesis de investigación (Hi) y la nula (H0); en las correlacionales no se habla de VI ni VD (cap. 6, pp. 128, 133).'],
+      ['Título', 'Breve pero informativo; identifica las variables y su relación; suele tener entre 12 y 20 palabras (cap. 15, p. 576).']
+    ],
+    design: {
+      correlacional: {
+        title: 'Alcance correlacional y diseño no experimental transeccional correlacional-causal',
+        text: 'Para Hernández-Sampieri y Mendoza, el alcance correlacional busca conocer la relación o el grado de asociación entre dos o más variables en un contexto específico: primero se mide cada variable y luego se cuantifica y analiza su vinculación; la correlación puede ser positiva o negativa. Para recolectar los datos en un único momento proponen el diseño no experimental transeccional correlacional-causal, cuyo interés es la relación entre variables. Advierten que en una hipótesis correlacional el orden de las variables no importa, por lo que no corresponde hablar de variable independiente ni dependiente.',
+        refs: [ ['Capítulo 5. Definición del alcance de la investigación', 'pp. 109-110'], ['Capítulo 7. Concepción o elección del diseño', 'pp. 176-178'], ['Capítulo 6. Formulación de hipótesis', 'p. 128'] ],
+        cite: '(Hernández-Sampieri y Mendoza, 2018, pp. 109-110)'
+      },
+      explicativo: {
+        title: 'Alcance explicativo y diseño no experimental transeccional correlacional-causal (causal)',
+        text: 'Según Hernández-Sampieri y Mendoza, los estudios explicativos van más allá de describir o relacionar: pretenden establecer las causas de los sucesos o fenómenos. Cuando las variables no se manipulan y los datos se recogen una sola vez, se emplea el diseño transeccional correlacional-causal en su modalidad causal, donde la causa ya ocurrió y el investigador reconstruye la dirección X → Y. Las hipótesis causales con una X y una Y son bivariadas; con dos o más variables independientes son multivariadas.',
+        refs: [ ['Capítulo 5. Definición del alcance de la investigación', 'pp. 110-111'], ['Capítulo 7. Concepción o elección del diseño', 'pp. 177-179'], ['Capítulo 6. Formulación de hipótesis', 'pp. 130-131'] ],
+        cite: '(Hernández-Sampieri y Mendoza, 2018, pp. 110-111)'
+      }
+    }
+  },
+  vara: {
+    id: 'vara',
+    initials: 'AV',
+    gradient: 'from-emerald-500 to-teal-600',
+    ring: 'ring-emerald-400',
+    soft: 'bg-emerald-50 text-emerald-700',
+    names: 'Alfredo Arístides Vara Horna',
+    shortCite: 'Vara',
+    year: 2015,
+    book: 'Los 7 pasos para elaborar una tesis',
+    publisher: 'Empresa Editora Macro',
+    apa: 'Vara Horna, A. A. (2015). <i>Los 7 pasos para elaborar una tesis</i>. Empresa Editora Macro.',
+    apaPlain: 'Vara Horna, A. A. (2015). Los 7 pasos para elaborar una tesis. Empresa Editora Macro.',
+    summary: 'Manual de ciencias empresariales organizado en 7 pasos con plantillas de avance. Clasifica los diseños generales en exploratorios, descriptivos y explicativos; la correlación es un subdiseño descriptivo.',
+    keys: ['7 pasos', 'Descriptivo-correlacional', '¿Qué? ¿En quién? ¿Dónde?', 'Título ≤ 20 palabras'],
+    labels: { nivel: 'Diseño general (nivel)', pg: 'Problema general', pe: 'Problemas específicos', og: 'Objetivo general', oe: 'Objetivos específicos', hg: 'Hipótesis general', he: 'Hipótesis específicas', codeP: 'PG', codePE: 'PE', codeO: 'OG', codeOE: 'OE', codeH: 'HG', codeHE: 'HE', codeH0: '' },
+    rules: [
+      ['Problema', 'Interrogativo y con coherencia, simplicidad, especificidad y unicidad; si es amplio, se divide en problemas específicos por áreas (técnica estructural) (Paso 3, pp. 206-208).'],
+      ['Objetivos', 'A cada problema le corresponde un objetivo; siempre empiezan con un verbo en infinitivo (Paso 3, pp. 213-214).'],
+      ['Hipótesis', 'Responden a la pregunta formulada y contienen ¿qué existe?, ¿en quién? y ¿en dónde?; habrá tantas hipótesis como objetivos (Paso 2, pp. 184-187).'],
+      ['Título', 'Informativo, sin siglas ni frases redundantes («Estudio de…», «Análisis de…»); un máximo de 20 palabras suele ser suficiente (Paso 3, Tabla 3.6, pp. 226-227).']
+    ],
+    design: {
+      correlacional: {
+        title: 'Diseño descriptivo · subdiseño descriptivo-correlacional',
+        text: 'Vara ubica la correlación dentro de los diseños descriptivos, que son generalmente cuantitativos y trabajan con muestras medianas o grandes. El subdiseño descriptivo-correlacional determina el grado de asociación entre varias variables; esas asociaciones dan pistas sobre posibles influencias, pero con este diseño no se puede afirmar la relación causa-efecto, solo sospecharla. Insiste en que no basta decir "descriptivo": hay que precisar el subtipo. Sus instrumentos típicos son cuestionarios y entrevistas estructuradas, y el análisis usa Pearson, Spearman, chi cuadrado o regresión.',
+        refs: [ ['Paso 4. Diseñando el método de investigación — 4.1.4 Diseños descriptivos', 'pp. 244-246'], ['Paso 4 — Tabla 4.2 Diseños generales y específicos', 'pp. 236-237'] ],
+        cite: '(Vara, 2015, pp. 244-246)'
+      },
+      explicativo: {
+        title: 'Diseño explicativo (causal)',
+        text: 'Para Vara, los diseños explicativos sirven para determinar las causas de los fenómenos: explican por qué ocurren, bajo qué condiciones o por qué dos o más variables están correlacionadas. Emplean términos como influir, provocar, causar o generar y contrastan hipótesis causales entre variables independientes (causas) y dependientes (efectos). Para hablar de causa deben concurrir tres criterios: asociación entre variables, precedencia de la causa y ausencia de explicaciones alternativas. Señala que los diseños experimentales y cuasiexperimentales son los más eficaces; sin manipulación, el análisis se apoya en modelos explicativos.',
+        refs: [ ['Paso 4. Diseñando el método de investigación — 4.1.5 Diseños explicativos', 'pp. 247-249'], ['Paso 4 — Tabla 4.2 Diseños generales y específicos', 'pp. 236-237'] ],
+        cite: '(Vara, 2015, pp. 247-249)'
+      }
+    }
+  },
+  villanueva: {
+    id: 'villanueva',
+    initials: 'LV',
+    gradient: 'from-indigo-500 to-sky-500',
+    ring: 'ring-indigo-400',
+    soft: 'bg-indigo-50 text-indigo-700',
+    names: 'Luis Augusto Villanueva Benites',
+    shortCite: 'Villanueva',
+    year: 2020,
+    book: 'Diseño del proyecto e informe de investigación: una aplicación a las ciencias empresariales',
+    publisher: 'Universidad Nacional Santiago Antúnez de Mayolo, Facultad de Administración y Turismo',
+    apa: 'Villanueva Benites, L. A. (2020). <i>Diseño del proyecto e informe de investigación: Una aplicación a las ciencias empresariales</i>. Universidad Nacional Santiago Antúnez de Mayolo, Facultad de Administración y Turismo.',
+    apaPlain: 'Villanueva Benites, L. A. (2020). Diseño del proyecto e informe de investigación: Una aplicación a las ciencias empresariales. Universidad Nacional Santiago Antúnez de Mayolo, Facultad de Administración y Turismo.',
+    summary: 'Texto de la Facultad de Administración y Turismo de la UNASAM. Distingue tipo (básica, aplicada, tecnológica) y nivel (correlacional, explicativo); usa el diseño no experimental transeccional y una matriz de consistencia con problemas específicos derivados de las dimensiones de la variable independiente.',
+    keys: ['Problema principal', 'Hipótesis bivariadas / multivariadas', 'Transeccional', 'Matriz de consistencia'],
+    labels: { nivel: 'Nivel de investigación', pg: 'Problema principal', pe: 'Problemas secundarios', og: 'Objetivo general', oe: 'Objetivos específicos', hg: 'Hipótesis general', he: 'Hipótesis específicas', codeP: 'PG', codePE: 'PS', codeO: 'OG', codeOE: 'OE', codeH: 'HG', codeHE: 'HE', codeH0: 'H0' },
+    rules: [
+      ['Título', 'Identifica las variables unidas por un conector (usualmente «y»), los sujetos-contexto y el tiempo (cap. 2, pp. 11-12).'],
+      ['Problema', 'La pregunta no debe poder responderse con un simple sí o no; en el nivel correlacional inicia con «¿Qué relación existe…?» y en el explicativo con «¿De qué manera… influye…?» (cap. 3, pp. 23-25).'],
+      ['Objetivos', 'A cada problema le corresponde un objetivo: «Establecer/Determinar la relación…» o «Explicar/Analizar la influencia…» (cap. 7, pp. 56-57).'],
+      ['Hipótesis', 'Las específicas se derivan de la general y se formulan según los indicadores o dimensiones de la variable independiente; se acompañan de su hipótesis nula (cap. 6, pp. 43-46).']
+    ],
+    design: {
+      correlacional: {
+        title: 'Nivel correlacional · diseño no experimental, transeccional y descriptivo-correlacional',
+        text: 'Villanueva define el tipo correlacional como aquel que mide el nivel de relación o asociación no causal entre dos o más variables, que puede ser positiva, negativa o espuria. Propone el diseño no experimental (no se manipulan deliberadamente las variables y se observan en su contexto natural), transeccional (los datos se recolectan en un solo momento) y descriptivo-correlacional (se describen las variables y la relación entre ellas). En la matriz de consistencia, los problemas específicos resultan de relacionar ordenadamente los indicadores o dimensiones de la variable independiente con la variable dependiente.',
+        refs: [ ['Capítulo 8. Aspectos metodológicos — 8.1 Tipos de estudio', 'p. 62'], ['Capítulo 8 — 8.2.1 Diseño no experimental', 'pp. 66-67, 73'], ['Capítulo 10. La matriz de consistencia', 'p. 98'] ],
+        cite: '(Villanueva, 2020, pp. 66-67)'
+      },
+      explicativo: {
+        title: 'Nivel explicativo · diseño no experimental transeccional correlacional-causal',
+        text: 'Para Villanueva, la investigación explicativa busca el porqué de los hechos estableciendo relaciones causa-efecto; puede ocuparse de las causas (investigación postfacto) o de los efectos (investigación experimental) mediante la prueba de hipótesis. En el plano no experimental corresponde al diseño transeccional correlacional-causal, que se fundamenta en hipótesis causales. Estas pueden ser bivariadas (una variable independiente y una dependiente) o multivariadas (varias independientes con una dependiente, entre otras combinaciones).',
+        refs: [ ['Capítulo 8. Aspectos metodológicos — 8.1 Tipos de estudio', 'p. 63'], ['Capítulo 8 — 8.2.1 Diseño no experimental', 'p. 67'], ['Capítulo 6. La hipótesis de investigación', 'p. 43'] ],
+        cite: '(Villanueva, 2020, p. 63)'
+      }
+    }
+  },
+  bernal: {
+    id: 'bernal',
+    initials: 'CB',
+    gradient: 'from-amber-500 to-amber-700',
+    ring: 'ring-amber-400',
+    soft: 'bg-amber-50 text-amber-800',
+    names: 'César Augusto Bernal Torres',
+    shortCite: 'Bernal',
+    year: 2010,
+    book: 'Metodología de la investigación: administración, economía, humanidades y ciencias sociales (3.ª ed.)',
+    publisher: 'Pearson Educación',
+    apa: 'Bernal, C. A. (2010). <i>Metodología de la investigación: Administración, economía, humanidades y ciencias sociales</i> (3.ª ed.). Pearson Educación.',
+    apaPlain: 'Bernal, C. A. (2010). Metodología de la investigación: Administración, economía, humanidades y ciencias sociales (3.ª ed.). Pearson Educación.',
+    summary: 'Texto de Pearson orientado a administración y economía. Sigue el método general de investigación: título, problema (enunciado y formulado en preguntas), objetivos, tipo de investigación, hipótesis, conceptuación y operacionalización de variables, población y muestra.',
+    keys: ['Pregunta general y específicas', 'Correlacional · Explicativa o causal', 'HA · Ho', 'Investigación seccional'],
+    labels: { nivel: 'Tipo de investigación', pg: 'Pregunta general', pe: 'Preguntas específicas', og: 'Objetivo general', oe: 'Objetivos específicos', hg: 'Hipótesis general', he: 'Hipótesis específicas', codeP: 'PG', codePE: 'PE', codeO: 'OG', codeOE: 'OE', codeH: 'HA', codeHE: 'HA', codeH0: 'Ho' },
+    rules: [
+      ['Título', 'Condensa la esencia del tema: es general en cuanto al tema y específico en cuanto al problema que se investiga (cap. 7, 7.1.4, p. 83).'],
+      ['Problema', 'Se enuncia y se formula mediante preguntas en dos niveles: una general, que recoge la esencia del problema y del título, y varias específicas, que son subpreguntas de la general (cap. 7, 7.2.2, p. 89).'],
+      ['Objetivos', 'Se redactan con verbos en infinitivo (determinar, identificar, evaluar, analizar…); el general responde al título y al problema, y los específicos conducen al general (cap. 7, 7.3.1, pp. 97-98).'],
+      ['Hipótesis', 'Se formulan cuando se evalúa la relación entre variables o se explican causas; se plantean la hipótesis de trabajo o alterna (HA) y la nula (Ho) (cap. 7, 7.7, pp. 136-138).']
+    ],
+    design: {
+      correlacional: {
+        title: 'Investigación correlacional · no experimental, seccional o transversal',
+        text: 'Bernal, siguiendo a Salkind, señala que la investigación correlacional tiene como propósito mostrar o examinar la relación entre variables o entre sus resultados, sin afirmar que una sea la causa de la otra: examina asociaciones, no relaciones causales. Cuando la información se obtiene de la población o la muestra una sola vez, el estudio es seccional o transversal, una especie de fotografía instantánea del fenómeno. Precisa además que en las hipótesis correlacionales pueden identificarse variables independientes y dependientes cuando se explica la correlación.',
+        refs: [ ['Capítulo 7. Proceso de investigación científica — 7.5.4 Investigación correlacional', 'p. 114'], ['Capítulo 7 — 7.5.8 Investigaciones seccionales o transversales', 'p. 118'], ['Capítulo 7 — 7.7.6 Tipos de variables', 'p. 139'] ],
+        cite: '(Bernal, 2010, p. 114)'
+      },
+      explicativo: {
+        title: 'Investigación explicativa o causal · no experimental, seccional o transversal',
+        text: 'Para Bernal, la investigación explicativa o causal es, para muchos expertos, el nivel ideal de la investigación no experimental: se fundamenta en la prueba de hipótesis, estudia el porqué de los hechos y analiza las causas y los efectos de la relación entre variables. En las hipótesis causales se identifican la variable independiente (causa), la dependiente (efecto) y las intervinientes. Si los datos se recogen una sola vez, la investigación es además seccional o transversal.',
+        refs: [ ['Capítulo 7. Proceso de investigación científica — 7.5.5 Investigación explicativa o causal', 'p. 115'], ['Capítulo 7 — 7.7.6 Tipos de variables', 'pp. 139-140'], ['Capítulo 7 — 7.5.8 Investigaciones seccionales o transversales', 'p. 118'] ],
+        cite: '(Bernal, 2010, p. 115)'
+      }
+    }
+  }
+};
+
+/* Datos complementarios por autor: referencia en partes (para cursiva en Word) y sustento de combinaciones */
+AUTHORS.sampieri.apaParts = ['Hernández-Sampieri, R., y Mendoza Torres, C. P. (2018). ', 'Metodología de la investigación: Las rutas cuantitativa, cualitativa y mixta', '. McGraw-Hill Interamericana Editores.'];
+AUTHORS.vara.apaParts = ['Vara Horna, A. A. (2015). ', 'Los 7 pasos para elaborar una tesis', '. Empresa Editora Macro.'];
+AUTHORS.villanueva.apaParts = ['Villanueva Benites, L. A. (2020). ', 'Diseño del proyecto e informe de investigación: Una aplicación a las ciencias empresariales', '. Universidad Nacional Santiago Antúnez de Mayolo, Facultad de Administración y Turismo.'];
+AUTHORS.bernal.apaParts = ['Bernal, C. A. (2010). ', 'Metodología de la investigación: Administración, economía, humanidades y ciencias sociales', ' (3.ª ed.). Pearson Educación.'];
+AUTHORS.bernal.comboNote = {
+  correlacional: 'Bernal (2010) indica que el problema se formula en dos niveles: una pregunta general que recoge la esencia del problema y varias preguntas específicas que interrogan sobre aspectos concretos y que, en conjunto, conforman la totalidad (cap. 7, p. 89). Cada combinación genera esas subpreguntas a partir de la general.',
+  explicativo: 'Bernal (2010) indica que el problema se formula con una pregunta general y varias específicas que son subpreguntas de ella (cap. 7, p. 89). En las hipótesis causales se distinguen la variable independiente (causa) y la dependiente (efecto) (pp. 139-140), por lo que cada combinación conserva ese sentido.'
+};
+AUTHORS.sampieri.comboNote = {
+  correlacional: 'Hernández-Sampieri y Mendoza (2018) señalan que las hipótesis correlacionales especifican la relación entre dos o más variables y que en ellas el orden de las variables no importa (cap. 6, pp. 127-128); por eso las combinaciones se redactan como «relación entre…».',
+  explicativo: 'Hernández-Sampieri y Mendoza (2018) explican que las hipótesis causales pueden ser bivariadas o multivariadas: varias independientes con una dependiente, una independiente con varias dependientes, entre otras (cap. 6, pp. 130-131, Figura 6.2). Cada combinación conserva el sentido causa → efecto.'
+};
+AUTHORS.vara.comboNote = {
+  correlacional: 'Vara (2015) propone la técnica estructural: cuando el problema es amplio, se segmenta en áreas y cada área origina un problema específico (Paso 3, pp. 207-208); a cada problema corresponde un objetivo (pp. 213-214) y una hipótesis (p. 187).',
+  explicativo: 'Vara (2015) propone la técnica estructural: el problema amplio se segmenta en áreas y cada una origina un problema específico (Paso 3, pp. 207-208). En los diseños explicativos las hipótesis contrastan la influencia de las variables independientes (causas) sobre las dependientes (efectos) (pp. 247-248).'
+};
+AUTHORS.villanueva.comboNote = {
+  correlacional: 'Villanueva (2020) indica que los problemas específicos se obtienen relacionando ordenadamente los indicadores o dimensiones de la variable independiente con la variable dependiente (cap. 10, p. 98), y que las hipótesis específicas se formulan según dichas dimensiones (cap. 6, p. 45).',
+  explicativo: 'Villanueva (2020) indica que los problemas específicos relacionan ordenadamente las dimensiones de la variable independiente con la dependiente (cap. 10, p. 98). Las hipótesis causales pueden ser bivariadas o multivariadas (cap. 6, p. 43).'
+};
+AUTHORS.sampieri.design.explicativo.text = AUTHORS.sampieri.design.explicativo.text.replace('la dirección X → Y', 'la dirección de la causa hacia el efecto').replace('con una X y una Y', 'con una variable independiente y una dependiente');
+
+/* =========================================================
+   2. ESTADO
+   ========================================================= */
+const MAX_DIMS = 5, MIN_DIMS = 2, MAX_VI = 4, MIN_VI_MULTI = 2;
+const newSrc = () => ({ autores:'', anio:'', pag:'', rtipo:'libro', titulo:'', fuente:'', vol:'', num:'', pags:'', doi:'' });
+const newDim = () => ({ name:'', ind:'', items:3 });
+const newVar = () => ({ name:'', def:'', citaTipo:'parafrasis', citaForma:'parentetica', src:[newSrc()], dims:[newDim(), newDim(), newDim()] });
+function initialState(){
+  return { step:1, author:null, nivel:null, tipo:null, combo:'dimVI_VD', orgType:null,
+           vis:[newVar()], vd:newVar(), pob:'', N:'', org:'', lugar:'', anio:'',
+           caratula:{ estudiantes:'', institucion:'', curso:'', docente:'' },
+           errors:{}, generated:false };
+}
+let state = initialState();
+const STEPS = [
+  { n:1, label:'Autor', desc:'Base metodológica' },
+  { n:2, label:'Tituladora', desc:'Variables y contexto' },
+  { n:3, label:'Enunciados', desc:'Combinación y matriz' },
+  { n:4, label:'Operacionalización', desc:'Definiciones e indicadores' }
+];
+
+/* =========================================================
+   3. UTILIDADES DE REDACCIÓN Y CORRECCIÓN AUTOMÁTICA DE ARTÍCULOS
+   ========================================================= */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clean = s => String(s || '').replace(/\s+/g, ' ').trim().replace(/[;,:]+$/, '').replace(/(?<![A-ZÁÉÍÓÚÑ])\.$/, '');
+const LETTERS = /[^A-Za-zÁÉÍÓÚÑÜáéíóúñü]/g;
+const deacc = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+const ART_RE = /^(el|la|los|las|lo|un|una|unos|unas)\s+/i;
+const stripArt = s => clean(s).replace(ART_RE, '');
+
+const MASC_A = new Set('clima sistema programa problema tema idioma esquema mapa dia planeta carisma paradigma dilema enigma poema drama aroma panorama prisma lema diagrama organigrama cronograma sofa'.split(' '));
+const FEM_X  = new Set('imagen base red ley clase parte gente frase fuente mente muerte noche calle sede suerte tarde llave nube labor flor piel sal miel mujer mano foto moto radio especie serie superficie mype pyme mipyme fe web app crisis sintesis tesis hipotesis diagnosis'.split(' '));
+const MASC_X = new Set('analisis estres interes pais mes enfasis autoanalisis marketing branding avion camion sarampion gorrion corazon'.split(' '));
+const SING_S = new Set('analisis estres crisis sintesis tesis hipotesis interes pais mes enfasis autoanalisis diagnosis'.split(' '));
+function genderOf(w){
+  if (MASC_A.has(w) || MASC_X.has(w)) return 'm';
+  if (FEM_X.has(w)) return 'f';
+  if (/ista$/.test(w)) return 'm';
+  if (/(ion|dad|tad|tud|ud|umbre|ie|ez|sis|itis)$/.test(w)) return 'f';
+  if (/a$/.test(w)) return 'f';
+  return 'm';
+}
+function singular(w){
+  if (SING_S.has(w)) return w;
+  if (/ces$/.test(w)) return w.slice(0, -3) + 'z';
+  if (/es$/.test(w) && /[dlnrjy]$/.test(w.slice(0, -2))) return w.slice(0, -2);
+  if (/s$/.test(w)) return w.slice(0, -1);
+  return w;
+}
+// Determina automáticamente el artículo correcto (corrige el que haya escrito el usuario)
+function autoArt(name){
+  const first = deacc(stripArt(name).toLowerCase().split(' ')[0] || '').replace(/[^a-zñ]/g, '');
+  if (!first) return 'la';
+  const plural = /s$/.test(first) && !SING_S.has(first) && first.length > 3;
+  const g = genderOf(plural ? singular(first) : first);
+  return plural ? (g === 'f' ? 'las' : 'los') : (g === 'f' ? 'la' : 'el');
+}
+// Variables y dimensiones: sustantivos comunes en minúscula (se respetan siglas)
+function normCommon(s){
+  s = stripArt(s); if (!s) return s;
+  const letters = s.replace(LETTERS, '');
+  const allUpper = letters.length > 6 && letters === letters.toUpperCase();
+  return s.split(' ').map(w => {
+    if (allUpper) return w.toLowerCase();
+    const L = w.replace(LETTERS, '');
+    if (L.length >= 2 && L.length <= 6 && L === L.toUpperCase()) return w;
+    return w.toLowerCase();
+  }).join(' ');
+}
+const withArt = name => { const n = normCommon(name); return n ? `${autoArt(name)} ${n}` : ''; };
+function properNoun(s){
+  s = clean(s); if (!s) return s;
+  const words = s.split(' ');
+  const letterWords = words.map(w => w.replace(LETTERS, '')).filter(Boolean);
+  const allCaps = letterWords.length > 1 && letterWords.every(L => L === L.toUpperCase());
+  // Solo se corrige lo escrito TODO EN MAYÚSCULAS cuando son varias palabras; una sigla aislada (UNASAM, SUNAT) se respeta
+  if (!allCaps) return s;
+  return words.map(w => {
+    const L = w.replace(LETTERS, '');
+    if (L.length > 3 && !w.includes('.')) return w.charAt(0) + w.slice(1).toLowerCase();
+    return w;
+  }).join(' ');
+}
+/* ---------- Clasificación de la entidad: empresa · organización/institución · rubro/sector ---------- */
+const LEGAL_RE = /(^|\s)(s\.?\s?a\.?\s?c\.?|e\.?\s?i\.?\s?r\.?\s?l\.?|s\.?\s?r\.?\s?l\.?|s\.?\s?a\.?\s?a\.?|s\.?\s?a\.?|ltda\.?|sac|eirl|srl|saa)$/i;
+const EMP_HEADS = new Set(('empresa hotel hostal hospedaje restaurante restaurant cevicheria polleria pizzeria cafeteria panaderia pasteleria tienda bodega botica farmacia ' +
+  'minera agencia supermercado compania consorcio corporacion grupo constructora agroexportadora cadena negocio fabrica planta discoteca spa gimnasio lavanderia ' +
+  'libreria ferreteria inmobiliaria financiera microfinanciera edpyme caja banco cooperativa clinica distribuidora comercializadora importadora exportadora ' +
+  'transportes transportista cine casino mercado minimarket market boutique lodge albergue resort operadora consultora estudio laboratorio veterinaria optica').split(' '));
+const ORG_HEADS = new Set(('municipalidad universidad institucion hospital colegio ministerio gobierno ugel ong asociacion superintendencia direccion gerencia ' +
+  'centro posta parroquia club comunidad red poder policia instituto escuela facultad oficina unidad programa proyecto comisaria seguro essalud sunat sunarp ' +
+  'reniec onp fiscalia corte juzgado prefectura subprefectura beneficencia junta federacion sindicato camara iglesia autoridad organismo servicio contraloria ' +
+  'defensoria congreso region area departamento').split(' '));
+const RUB_HEADS = new Set('sector rubro industria comercio turismo mercado mype pyme mipyme emprendimiento microempresa'.split(' '));
+// Siglas frecuentes: [artículo, tipo]
+const ACRONYMS = { unasam:['la','organizacion'], unmsm:['la','organizacion'], uni:['la','organizacion'], pucp:['la','organizacion'], ucv:['la','organizacion'], uladech:['la','organizacion'],
+  upao:['la','organizacion'], usmp:['la','organizacion'], upc:['la','organizacion'], utp:['la','organizacion'], uap:['la','organizacion'], sunat:['la','organizacion'], sunarp:['la','organizacion'],
+  reniec:['el','organizacion'], essalud:['el','organizacion'], ugel:['la','organizacion'], minsa:['el','organizacion'], minedu:['el','organizacion'], sutran:['la','organizacion'],
+  indecopi:['el','organizacion'], osinergmin:['el','organizacion'], pnp:['la','organizacion'], sbs:['la','organizacion'], onp:['la','organizacion'], mef:['el','organizacion'],
+  bcrp:['el','organizacion'], inei:['el','organizacion'], senamhi:['el','organizacion'], sernanp:['el','organizacion'], digesa:['la','organizacion'], diresa:['la','organizacion'],
+  dircetur:['la','organizacion'], mincetur:['el','organizacion'], promperu:['el','organizacion'], senasa:['el','organizacion'], ana:['la','organizacion'],
+  bcp:['el','empresa'], bbva:['el','empresa'], interbank:['el','empresa'], scotiabank:['el','empresa'], mibanco:['el','empresa']
+ };
+const ORG_TYPES = { empresa:'Empresa', organizacion:'Organización / institución', rubro:'Rubro / sector' };
+
+function orgWords(raw){ return properNoun(raw).replace(ART_RE, '').split(' ').filter(Boolean); }
+function detectOrgType(raw){
+  const w = orgWords(raw); if (!w.length) return 'empresa';
+  const s = w.join(' '), f = deacc(w[0].toLowerCase());
+  if (w.length === 1 && ACRONYMS[f]) return ACRONYMS[f][1];
+  const plural = /s$/.test(f) && !SING_S.has(f) && f.length > 3, sg = plural ? singular(f) : f;
+  if (LEGAL_RE.test(s)) return 'empresa';
+  if (RUB_HEADS.has(sg) && (plural || f === 'sector' || f === 'rubro' || !/^[A-ZÁÉÍÓÚÑ]/.test(w[0]) || w.length === 1)) return plural || RUB_HEADS.has(f) ? 'rubro' : 'rubro';
+  if (plural && (EMP_HEADS.has(sg) || ORG_HEADS.has(sg) || /^[a-záéíóúñ]/.test(w[0]))) return 'rubro';
+  if (ORG_HEADS.has(sg)) return 'organizacion';
+  if (EMP_HEADS.has(sg)) return 'empresa';
+  if (/^[A-ZÁÉÍÓÚÑ0-9]/.test(w[0])) return 'empresa';
+  return 'rubro';
+}
+const orgType = () => detectOrgType(state.org);
+function orgPhrase(raw, type){
+  type = type || orgType();
+  const w = orgWords(raw); if (!w.length) return '';
+  const f = deacc(w[0].toLowerCase()), sg = singular(f);
+  const restProper = w.slice(1).some(x => /^[A-ZÁÉÍÓÚÑ]/.test(x));
+  if (w.length === 1 && ACRONYMS[f]) return `${ACRONYMS[f][0]} ${w[0]}`;
+  // si el sustantivo inicial forma parte del nombre propio (hotel El Tumi → Hotel El Tumi), va con mayúscula
+  if (restProper && type !== 'rubro') w[0] = cap(w[0]);
+  const isSigla = x => { const L = x.replace(LETTERS, ''); return L.length >= 2 && L.length <= 6 && L === L.toUpperCase(); };
+  if (type === 'rubro'){
+    // rubro o sector: sustantivo común en minúscula (se respetan nombres propios y siglas posteriores)
+    w[0] = w[0].toLowerCase();
+    return `${autoArt(w[0])} ${w.join(' ')}`;
+  }
+  if (type === 'organizacion'){
+    if (ORG_HEADS.has(sg) && !restProper) w[0] = w[0].toLowerCase();
+    if (!ORG_HEADS.has(sg) && isSigla(w[0]) && w.length === 1) return `la institución ${w[0]}`;
+    return `${autoArt(w[0])} ${w.join(' ')}`;
+  }
+  // empresa
+  if (EMP_HEADS.has(sg) && !(sg === 'empresa' && w.length === 1)){
+    if (!restProper) w[0] = w[0].toLowerCase();
+    if (sg === 'empresa') w[0] = 'empresa';
+    return `${autoArt(w[0])} ${w.join(' ')}`;
+  }
+  return `la empresa ${cap(w.join(' '))}`;
+}
+// ¿El nombre de la entidad ya contiene el lugar? (evita «Municipalidad Provincial de Huaraz, Huaraz»)
+function lugarInOrg(){
+  const l = deacc(clean(state.lugar).toLowerCase()), o = deacc(clean(state.org).toLowerCase());
+  return !!l && new RegExp(`(^|\\s)${l.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}($|\\s|,)`).test(o);
+}
+// ¿La población es la misma unidad que el rubro? (evita «las mypes de las mypes textiles»)
+function sameUnit(){
+  const p = deacc(stripArt(state.pob).toLowerCase().split(' ')[0] || ''), o = deacc(orgWords(state.org).join(' ').toLowerCase().split(' ')[0] || '');
+  return !!p && !!o && singular(p) === singular(o);
+}
+// Conector de lugar según el tipo de entidad
+function placeConn(lugar, withPlace = true){
+  if (!withPlace || lugarInOrg() || !lugar) return '';
+  return orgType() === 'rubro' ? ` de ${lugar}` : `, ${lugar}`;
+}
+function ctxBase(pob, org, withPob = true){
+  if (sameUnit()) return org;
+  return withPob ? `${pob} de ${org}` : org;
+}
+const pobPhrase = raw => withArt(raw);
+const contract = s => s.replace(/\bde el\b/g, 'del').replace(/\ba el\b/g, 'al');
+function cap(s){
+  if (!s) return s;
+  if (s.startsWith('¿')) return '¿' + s.charAt(1).toUpperCase() + s.slice(2);
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+const fin = s => cap(contract(s.replace(/\s+/g, ' ').replace(/\s+([,.?:])/g, '$1').trim()));
+const conjY = next => /^(i|hi)(?!e)/i.test(deacc(next)) ? ' e ' : ' y ';
+function joinList(arr){
+  if (arr.length <= 1) return arr[0] || '';
+  const last = arr[arr.length - 1];
+  return arr.slice(0, -1).join(', ') + conjY(last) + last;
+}
+// Enumeración que respeta elementos compuestos: «A; B, y C» cuando hay comas internas
+function joinRich(arr){
+  if (arr.length <= 1) return arr[0] || '';
+  const last = arr[arr.length - 1];
+  if (arr.some(x => x.includes(','))) return arr.slice(0, -1).join('; ') + ';' + conjY(last) + last;
+  if (arr.some(x => / (y|e) /.test(x))) return arr.slice(0, -1).join(', ') + ',' + conjY(last) + last;
+  return joinList(arr);
+}
+const countWords = t => (t.match(/\S+/g) || []).filter(w => /[A-Za-zÁÉÍÓÚÑÜáéíóúñü0-9]/.test(w)).length;
+const tipoTxt = () => state.tipo === 'multivariada' ? 'multivariado' : 'bivariado';
+const vdCode = () => `V${state.vis.length + 1}`;
+const viCodes = () => state.vis.map((_, i) => `V${i + 1}`);
+const isCorrS = () => state.author === 'sampieri' && state.nivel === 'correlacional';
+
+/* =========================================================
+   4. COMBINACIONES SEGÚN EL ALCANCE
+   ========================================================= */
+function comboOptions(){
+  const corr = state.nivel !== 'explicativo', multi = state.tipo === 'multivariada';
+  const VI = joinList(viCodes()), VD = vdCode(), s = corr ? '↔' : '→';
+  const o = [
+    { id:'dimVI_VD', rec:true, name:`Dimensiones de ${VI} ${s} ${VD}`,
+      desc: corr ? `Cada dimensión de ${VI} se relaciona con ${VD}.` : `Influencia de cada dimensión de ${VI} en ${VD}.`, ex:`D1·V1 ${s} ${VD}` },
+    { id:'VI_dimVD', name:`${VI} ${s} dimensiones de ${VD}`,
+      desc: corr ? `${VI} se ${multi ? 'relacionan' : 'relaciona'} con cada dimensión de ${VD}.` : `Influencia de ${VI} en cada dimensión de ${VD}.`, ex:`V1 ${s} D1·${VD}` },
+    { id:'dim_dim', name:`Dimensión ${s} dimensión (emparejadas)`,
+      desc:`Empareja en orden: D1 de ${multi ? 'cada variable' : 'V1'} con D1 de ${VD}, D2 con D2… Requiere el mismo número de dimensiones.`, ex:`D1·V1 ${s} D1·${VD}` },
+    { id:'mixta', name:'Mixta (desagregación doble)',
+      desc:`Combina «dimensiones de ${VI} ${s} ${VD}» con «${VI} ${s} dimensiones de ${VD}».`, ex:`D1·V1 ${s} ${VD} + V1 ${s} D1·${VD}` }
+  ];
+  if (multi) o.push({ id:'VI_VD', name:`Cada variable ${s} ${VD}`,
+      desc: corr ? `Relación individual de cada variable con ${VD}.` : `Efecto individual de cada variable independiente sobre ${VD}.`, ex:`V1 ${s} ${VD}; V2 ${s} ${VD}` });
+  if (multi && corr) o.push({ id:'pares', name:'Todas las variables por pares',
+      desc:'Relaciona cada par posible de variables (hipótesis correlacionales multivariadas).', ex:'V1 ↔ V2; V1 ↔ V3; V2 ↔ V3' });
+  return o;
+}
+function pairs(id){
+  const k = state.vis.length, vdL = vdCode(); const out = [];
+  const VI = state.vis.map((v, i) => ({ name:v.name, code:`V${i + 1}`, dims:v.dims.map((d, j) => ({ name:d.name, code:`D${j + 1}·V${i + 1}` })) }));
+  const VD = { name:state.vd.name, code:vdL, dims:state.vd.dims.map((d, j) => ({ name:d.name, code:`D${j + 1}·${vdL}` })) };
+  const dimVI = () => VI.forEach(v => v.dims.forEach(d => out.push({ a:d, b:VD })));
+  const viDim = () => VI.forEach(v => VD.dims.forEach(d => out.push({ a:v, b:d })));
+  switch (id){
+    case 'dimVI_VD': dimVI(); break;
+    case 'VI_dimVD': viDim(); break;
+    case 'dim_dim': VI.forEach(v => v.dims.forEach((d, j) => { if (VD.dims[j]) out.push({ a:d, b:VD.dims[j] }); })); break;
+    case 'mixta': dimVI(); viDim(); break;
+    case 'VI_VD': VI.forEach(v => out.push({ a:v, b:VD })); break;
+    case 'pares': { const all = [...VI, VD]; for (let i = 0; i < all.length; i++) for (let j = i + 1; j < all.length; j++) out.push({ a:all[i], b:all[j] }); break; }
+  }
+  return out;
+}
+const comboName = () => (comboOptions().find(o => o.id === state.combo) || {}).name || '';
+
+/* =========================================================
+   5. MOTOR DE REDACCIÓN SEGÚN AUTOR
+   ========================================================= */
+function model(){
+  const s = state;
+  const pob = pobPhrase(s.pob), org = orgPhrase(s.org), lugar = properNoun(s.lugar), anio = clean(s.anio);
+  const vis = s.vis.map((v, i) => ({ ...v, idx:i, label:`V${i + 1}`, text:withArt(v.name), bare:normCommon(v.name) }));
+  const vd = { ...s.vd, label:vdCode(), text:withArt(s.vd.name), bare:normCommon(s.vd.name) };
+  return { pob, org, lugar, anio, vis, vd, plural:vis.length > 1,
+    ctxFull: contract(`${ctxBase(pob, org)}${placeConn(lugar)}, ${anio}`),
+    ctxShort: contract(`${ctxBase(pob, org)}${orgType() === 'rubro' ? placeConn(lugar) : ''}`) };
+}
+
+function buildTitle(onlyFull){
+  const m = model();
+  const a = state.author || 'villanueva', nv = state.nivel || 'correlacional';
+  const variants = [ [true, true], [false, true], [true, false], [false, false] ];
+  let out = null;
+  for (const [withPob, withPlace] of variants){
+    const list = m.vis.map(v => v.text);
+    const X = nv === 'correlacional' ? list.join(', ') : joinList(list);
+    const Y = m.vd.text, yy = conjY(Y);
+    const P = withPob && !sameUnit() ? `${m.pob} de ` : '';
+    const L = placeConn(m.lugar, withPlace);
+    let t;
+    if (a === 'sampieri') t = nv === 'correlacional' ? `Relación entre ${X}${yy}${Y} en ${P}${m.org}${L}, ${m.anio}` : `Influencia de ${X} en ${Y} de ${P}${m.org}${L}, ${m.anio}`;
+    else if (a === 'bernal') t = nv === 'correlacional' ? `${X}${yy}${Y} en ${P}${m.org}${L}, ${m.anio}` : `Efecto de ${X} en ${Y} de ${P}${m.org}${L}, ${m.anio}`;
+    else if (a === 'vara'){
+      const Lv = withPlace && !lugarInOrg() ? ` de ${m.lugar}` : '';
+      t = nv === 'correlacional' ? `${X}${yy}${Y} en ${P}${m.org}${Lv}: ${m.anio}` : `Influencia de ${X} en ${Y} de ${P}${m.org}${Lv}: ${m.anio}`;
+    } else t = nv === 'correlacional' ? `${X}${yy}${Y} en ${P}${m.org}${L}, ${m.anio}` : `${list.join(', ')} y su influencia en ${Y} de ${P}${m.org}${L}, ${m.anio}`;
+    t = fin(t);
+    out = { text:t, words:countWords(t), compact:!(withPob && withPlace) };
+    return out;
+  }
+  out.over = true;
+  return out;
+}
+
+// Plantillas por autor y alcance: P problema, Ps problema específico, O/Os objetivos, H hipótesis, N hipótesis nula
+const TPL = {
+  sampieri: {
+    correlacional: {
+      P: (X, Y, c) => `¿Cuál es la relación entre ${X} y ${Y} en ${c}?`,
+      O: (X, Y, c) => `Determinar la relación entre ${X} y ${Y} en ${c}.`,
+      Os:(X, Y, c) => `Determinar la relación entre ${X} y ${Y} en ${c}.`,
+      H: (X, Y, c, pl) => `${X} ${pl ? 'se relacionan' : 'se relaciona'} de manera positiva y significativa con ${Y} en ${c}.`,
+      N: (X, Y, c, pl) => `${X} no ${pl ? 'se relacionan' : 'se relaciona'} de manera significativa con ${Y} en ${c}.`
+    },
+    explicativo: {
+      P: (X, Y, c, pl) => `¿En qué medida ${X} ${pl ? 'influyen' : 'influye'} en ${Y} de ${c}?`,
+      O: (X, Y, c) => `Determinar la influencia de ${X} en ${Y} de ${c}.`,
+      Os:(X, Y, c) => `Analizar la influencia de ${X} en ${Y} de ${c}.`,
+      H: (X, Y, c, pl) => `${X} ${pl ? 'influyen' : 'influye'} significativamente en ${Y} de ${c}.`,
+      N: (X, Y, c, pl) => `${X} no ${pl ? 'influyen' : 'influye'} significativamente en ${Y} de ${c}.`
+    }
+  },
+  vara: {
+    correlacional: {
+      P: (X, Y, c) => `¿Existe relación entre ${X} y ${Y} de ${c}?`,
+      O: (X, Y, c) => `Determinar la relación entre ${X} y ${Y} de ${c}.`,
+      Os:(X, Y, c) => `Determinar la relación entre ${X} y ${Y} de ${c}.`,
+      H: (X, Y, c) => `Existe relación directa entre ${X} y ${Y} de ${c}.`,
+      N: null
+    },
+    explicativo: {
+      P: (X, Y, c) => `¿Cuál es la influencia de ${X} en ${Y} de ${c}?`,
+      O: (X, Y, c) => `Determinar la influencia de ${X} en ${Y} de ${c}.`,
+      Os:(X, Y, c) => `Determinar la influencia de ${X} en ${Y} de ${c}.`,
+      H: (X, Y, c, pl) => `${X} ${pl ? 'influyen' : 'influye'} directamente en ${Y} de ${c}.`,
+      N: null
+    }
+  },
+  bernal: {
+    correlacional: {
+      P: (X, Y, c) => `¿Hay relación entre ${X} y ${Y} de ${c}?`,
+      O: (X, Y, c) => `Determinar la relación entre ${X} y ${Y} de ${c}.`,
+      Os:(X, Y, c) => `Identificar la relación entre ${X} y ${Y} de ${c}.`,
+      H: (X, Y, c) => `Existe relación significativa entre ${X} y ${Y} de ${c}.`,
+      N: (X, Y, c) => `No existe relación significativa entre ${X} y ${Y} de ${c}.`
+    },
+    explicativo: {
+      P: (X, Y, c) => `¿Cuál es el efecto de ${X} en ${Y} de ${c}?`,
+      O: (X, Y, c) => `Determinar el efecto de ${X} en ${Y} de ${c}.`,
+      Os:(X, Y, c) => `Analizar el efecto de ${X} en ${Y} de ${c}.`,
+      H: (X, Y, c, pl) => `${X} ${pl ? 'determinan' : 'determina'} significativamente ${Y} de ${c}.`,
+      N: (X, Y, c, pl) => `${X} no ${pl ? 'determinan' : 'determina'} significativamente ${Y} de ${c}.`
+    }
+  },
+  villanueva: {
+    correlacional: {
+      P: (X, Y, c) => `¿Qué relación existe entre ${X} y ${Y} de ${c}?`,
+      O: (X, Y, c) => `Establecer la relación entre ${X} y ${Y} de ${c}.`,
+      Os:(X, Y, c) => `Determinar la relación entre ${X} y ${Y} de ${c}.`,
+      H: (X, Y, c) => `Existe una relación positiva y significativa entre ${X} y ${Y} de ${c}.`,
+      N: (X, Y, c) => `No existe una relación significativa entre ${X} y ${Y} de ${c}.`
+    },
+    explicativo: {
+      P: (X, Y, c, pl) => `¿De qué manera ${X} ${pl ? 'influyen' : 'influye'} en ${Y} de ${c}?`,
+      O: (X, Y, c) => `Explicar la influencia de ${X} en ${Y} de ${c}.`,
+      Os:(X, Y, c) => `Analizar la influencia de ${X} en ${Y} de ${c}.`,
+      H: (X, Y, c, pl) => `${X} ${pl ? 'influyen' : 'influye'} significativamente en ${Y} de ${c}.`,
+      N: (X, Y, c, pl) => `${X} no ${pl ? 'influyen' : 'influye'} significativamente en ${Y} de ${c}.`
+    }
+  }
+};
+
+function buildMatrix(){
+  const m = model(); const A = AUTHORS[state.author]; const T = TPL[state.author][state.nivel];
+  const corr = state.nivel === 'correlacional';
+  const X = corr ? m.vis.map(v => v.text).join(', ') : joinList(m.vis.map(v => v.text));
+  const Y = m.vd.text, pl = m.plural, L = A.labels;
+  const general = {
+    p: fin(T.P(X, Y, m.ctxFull, pl)), o: fin(T.O(X, Y, m.ctxFull, pl)),
+    h: fin(T.H(X, Y, m.ctxFull, pl)), h0: T.N ? fin(T.N(X, Y, m.ctxFull, pl)) : ''
+  };
+  const Ps = T.Ps || T.P;
+  const specific = pairs(state.combo).map((pr, i) => {
+    const a = withArt(pr.a.name), b = withArt(pr.b.name), sym = corr ? '↔' : '→';
+    return { k:i + 1, tag:`${pr.a.code} ${sym} ${pr.b.code}`,
+      p: fin(Ps(a, b, m.ctxFull, false)), o: fin(T.Os(a, b, m.ctxFull, false)),
+      h: fin(T.H(a, b, m.ctxFull, false)), h0: T.N ? fin(T.N(a, b, m.ctxFull, false)) : '' };
+  });
+  return { m, A, L, general, specific };
+}
+
+function sampleSize(N){
+  N = parseInt(N, 10); if (!N || N < 1) return null;
+  const Z = 1.96, p = 0.5, q = 0.5, e = 0.05;
+  const n = Math.ceil((N * Z * Z * p * q) / ((e * e) * (N - 1) + Z * Z * p * q));
+  return { N, n:Math.min(n, N), censo:N <= 50 };
+}
+
+function buildMethod(){
+  const { m } = buildMatrix(); const a = state.author, corr = state.nivel === 'correlacional';
+  const ss = sampleSize(state.N);
+  const pobBare = normCommon(state.pob);
+  const popText = contract(`${ss.N} ${sameUnit() ? m.org.replace(ART_RE, '') : `${pobBare} de ${m.org}`}${placeConn(m.lugar)}, ${m.anio}`);
+  const sampleText = ss.censo
+    ? `Población muestral (censo): se trabajará con los ${ss.N} ${pobBare}, al ser una población pequeña y accesible.`
+    : `Muestra probabilística por muestreo aleatorio simple: n = ${ss.n} ${pobBare} (población finita; N = ${ss.N}; Z = 1,96; p = q = 0,5; e = 0,05).`;
+  const formula = 'n = (N · Z² · p · q) / [e² · (N − 1) + Z² · p · q]';
+  const VIc = m.vis.map(v => v.label).join(', '), VD = m.vd.label;
+  const scheme = corr ? `${VIc}  ↔  ${VD}` : `${VIc}  →  ${VD}`;
+  const reg = m.plural ? 'Regresión lineal múltiple' : 'Regresión lineal simple';
+  const M = {
+    sampieri: [
+      { k:'Enfoque', v:'Cuantitativo (ruta cuantitativa)', why:'Es secuencial y probatorio: se miden las variables, se prueban hipótesis y se analizan los datos con métodos estadísticos.', cite:'Capítulo 1 · pp. 5-7', c:'(Hernández-Sampieri y Mendoza, 2018, pp. 5-7)' },
+      { k:'Tipo', v:'Básica (generación de conocimiento)', why:'La obra no utiliza la tipología básica/aplicada como eje: organiza el método por ruta, alcance y diseño. Se consigna «básica» porque el estudio busca probar teoría sin intervenir la realidad; verifique el formato de su escuela.', cite:'Organización general de la ruta (caps. 1, 5 y 7)', c:'' },
+      { k:'Alcance', v: corr ? 'Correlacional' : 'Explicativo', why: corr ? 'Busca conocer la relación o grado de asociación entre las variables: se mide cada una y luego se cuantifica y analiza su vinculación.' : 'Busca establecer las causas del fenómeno: por qué ocurre y en qué condiciones se presenta la variable dependiente.', cite: corr ? 'Capítulo 5 · pp. 109-110' : 'Capítulo 5 · pp. 110-111', c: corr ? '(Hernández-Sampieri y Mendoza, 2018, pp. 109-110)' : '(Hernández-Sampieri y Mendoza, 2018, pp. 110-111)' },
+      { k:'Diseño', v: corr ? 'No experimental, transeccional correlacional-causal (modalidad correlacional)' : 'No experimental, transeccional correlacional-causal (modalidad causal)', why: corr ? 'Las variables no se manipulan y los datos se recolectan en un único momento; el interés es la relación entre las variables.' : 'Las variables no se manipulan; la causa ya ocurrió y se analiza su efecto en un único momento.', cite:'Capítulo 7 · pp. 176-179', c:'(Hernández-Sampieri y Mendoza, 2018, pp. 176-179)', scheme },
+      { k:'Población', v: popText, why:'Conjunto de todos los casos que concuerdan con una serie de especificaciones de contenido, lugar y tiempo.', cite:'Capítulo 8 · pp. 198-199', c:'(Hernández-Sampieri y Mendoza, 2018, pp. 198-199)' },
+      { k:'Muestra', v: sampleText, why: ss.censo ? 'Cuando la población es pequeña puede realizarse un censo e incluir a todos los casos.' : 'Subgrupo en el que todos los elementos tienen la misma probabilidad de ser elegidos; el tamaño se calcula para lograr representatividad.', cite: ss.censo ? 'Capítulo 8 · p. 196' : 'Capítulo 8 · pp. 200-202, 212', c: ss.censo ? '(Hernández-Sampieri y Mendoza, 2018, p. 196)' : '(Hernández-Sampieri y Mendoza, 2018, p. 212)', formula: ss.censo ? '' : formula },
+      { k:'Técnica e instrumento', v:'Técnica: encuesta · Instrumento: cuestionario con escala tipo Likert (uno por variable, organizado por dimensiones)', why:'El cuestionario es el instrumento más utilizado para recolectar datos cuantitativos; la escala Likert mide actitudes mediante afirmaciones. Requiere confiabilidad (alfa de Cronbach) y validez.', cite:'Capítulo 9 · pp. 250, 273; Capítulo 10 · p. 324', c:'(Hernández-Sampieri y Mendoza, 2018, p. 250)' },
+      { k:'Análisis de datos', v: corr ? 'Coeficiente de correlación de Pearson (o rho de Spearman si los datos son ordinales o no normales)' : reg, why: corr ? 'Prueba estadística para analizar la relación entre dos variables medidas en un nivel por intervalos o de razón.' : 'Permite analizar el efecto de una o varias variables independientes sobre la dependiente.', cite: corr ? 'Capítulo 10 · pp. 345-346' : 'Capítulo 10 · p. 371', c: corr ? '(Hernández-Sampieri y Mendoza, 2018, pp. 345-346)' : '(Hernández-Sampieri y Mendoza, 2018, p. 371)' }
+    ],
+    vara: [
+      { k:'Enfoque', v:'Cuantitativo', why:'Su objetivo es medir y estimar valores; usa instrumentos estructurados, muestreo probabilístico y análisis estadístico.', cite:'Paso 4 · Tabla 4.3 · pp. 239-240', c:'(Vara, 2015, pp. 239-240)' },
+      { k:'Tipo', v: corr ? 'Básica' : 'Aplicada', why: corr ? 'En la Tabla 4.1, investigar la relación entre variables o constructos es un interés de la investigación básica (generar conocimiento), asociada a los estudios descriptivos.' : 'En la Tabla 4.1, la investigación aplicada busca resolver problemas concretos de las empresas y se asocia a los estudios explicativos. El autor aclara que hoy toda investigación es a la vez básica y aplicada.', cite:'Paso 4 · Tabla 4.1 · pp. 235-236', c:'(Vara, 2015, pp. 235-236)' },
+      { k:'Diseño general (nivel)', v: corr ? 'Descriptivo (cuantitativo)' : 'Explicativo (cuantitativo)', why: corr ? 'Existe bibliografía sobre el tema; trabaja con muestras medianas y grandes y especifica propiedades y relaciones.' : 'Busca las causas de los eventos y explica por qué ocurren; existe abundante bibliografía y estudios previos.', cite:'Paso 4 · Tabla 4.2 · pp. 236-237', c:'(Vara, 2015, pp. 236-237)' },
+      { k:'Diseño específico', v: corr ? 'Descriptivo-correlacional, de corte transversal' : 'Explicativo no experimental (análisis con modelo explicativo de regresión)', why: corr ? 'Determina el grado de asociación entre variables; permite sospechar, pero no afirmar, relaciones causa-efecto.' : 'Contrasta hipótesis causales entre las variables independientes y la dependiente. Al no manipular variables, la causalidad se analiza con un modelo explicativo; el autor señala que los experimentos son los diseños más eficaces.', cite: corr ? 'Paso 4 · Tabla 4.5 · p. 246' : 'Paso 4 · 4.1.5 · pp. 247-249', c: corr ? '(Vara, 2015, p. 246)' : '(Vara, 2015, pp. 247-249)', scheme },
+      { k:'Población', v: popText, why:'Conjunto de individuos (personas, empresas, documentos, etc.) con propiedades comunes; debe delimitarse con criterios de inclusión y exclusión.', cite:'Paso 4 · 4.2 y 4.2.2 · pp. 261-263', c:'(Vara, 2015, pp. 261-263)' },
+      { k:'Muestra', v: sampleText, why: ss.censo ? 'Si la población es pequeña y accesible, es mejor trabajar con toda la población.' : 'En estudios cuantitativos el tamaño depende de la precisión deseada y se calcula mediante fórmula con nivel de confianza y error.', cite: ss.censo ? 'Paso 4 · 4.2.1 · p. 262' : 'Paso 4 · 4.2.4 · pp. 268-270', c: ss.censo ? '(Vara, 2015, p. 262)' : '(Vara, 2015, pp. 268-270)', formula: ss.censo ? '' : formula },
+      { k:'Técnica e instrumento', v:'Técnica: encuesta · Instrumento: cuestionario / escala estandarizada (por dimensiones e indicadores)', why:'Instrumentos estructurados propios de los diseños descriptivos y explicativos; se validan por criterio de jueces y su fiabilidad por consistencia interna (alfa de Cronbach).', cite:'Paso 4 · 4.3.5 · p. 309; 4.4.6 · p. 394; 4.4.7 · p. 402', c:'(Vara, 2015, p. 309)' },
+      { k:'Análisis de datos', v: corr ? 'Correlación de Pearson (r) o Spearman; chi cuadrado para datos categóricos' : reg, why:'Técnicas cuantitativas señaladas para el diseño elegido; la técnica se escoge según el nivel de medición y el objetivo.', cite:'Paso 4 · Tabla 4.5 · p. 246; Paso 5 · 5.3.3 · p. 474', c:'(Vara, 2015, p. 474)' }
+    ],
+    bernal: [
+      { k:'Enfoque', v:'Cuantitativo (método cuantitativo o tradicional)', why:'Se fundamenta en la medición de las características de los fenómenos y deriva, de un marco conceptual, postulados que expresan relaciones entre variables de forma deductiva; tiende a generalizar los resultados.', cite:'Capítulo 6 · 6.1 · p. 60', c:'(Bernal, 2010, p. 60)' },
+      { k:'Tipo de investigación', v: corr ? 'Correlacional' : 'Explicativa o causal', why: corr ? 'Muestra o examina la relación entre variables o sus resultados, sin explicar que una sea la causa de la otra.' : 'Estudia el porqué de los hechos y analiza las causas y los efectos de la relación entre variables mediante la prueba de hipótesis.', cite: corr ? 'Capítulo 7 · 7.5.4 · p. 114' : 'Capítulo 7 · 7.5.5 · p. 115', c: corr ? '(Bernal, 2010, p. 114)' : '(Bernal, 2010, p. 115)' },
+      { k:'Diseño', v: corr ? 'No experimental, seccional o transversal, correlacional' : 'No experimental, seccional o transversal, explicativo-causal', why:'No se manipulan las variables y la información se obtiene de la población o muestra una única vez, en un momento dado, como una fotografía instantánea del fenómeno.', cite:'Capítulo 7 · 7.5.5 y 7.5.8 · pp. 115, 118', c:'(Bernal, 2010, p. 118)', scheme },
+      { k:'Población', v: popText, why:'Conjunto de todos los elementos a los cuales se refiere la investigación; también, el conjunto de todas las unidades de muestreo.', cite:'Capítulo 7 · 7.9.1 · p. 160', c:'(Bernal, 2010, p. 160)' },
+      { k:'Muestra', v: sampleText, why: ss.censo ? 'Al ser una población pequeña y accesible, se estudian todos sus elementos; así se evita el error muestral que surge cuando se extrae una muestra en lugar de hacer un censo.' : 'Parte de la población de la que realmente se obtiene la información; su tamaño se estima con la fórmula de muestreo proporcional para población conocida, con un error de estimación no mayor al 6 %.', cite: ss.censo ? 'Capítulo 9 · 9.1.3 · p. 249' : 'Capítulo 7 · 7.9 y casos y talleres · pp. 161, 179-180', c: ss.censo ? '(Bernal, 2010, p. 249)' : '(Bernal, 2010, p. 179)', formula: ss.censo ? '' : formula },
+      { k:'Técnica e instrumento', v:'Técnica: encuesta · Instrumento: cuestionario (escala tipo Likert, por dimensiones e indicadores)', why:'La encuesta se fundamenta en un cuestionario o conjunto de preguntas preparadas para obtener información de las personas; el instrumento debe ser confiable y válido.', cite:'Capítulo 7 · 7.10.2 · p. 194; Capítulo 9 · 9.1.1 y 9.2 · pp. 247-250', c:'(Bernal, 2010, p. 194)' },
+      { k:'Análisis de datos', v: corr ? 'Coeficiente de correlación (r) y prueba de hipótesis (Ho y HA, α = 0,05)' : `${reg}, coeficiente de determinación (r²) y prueba de hipótesis (Ho y HA, α = 0,05)`, why:'La prueba de hipótesis plantea Ho y HA, fija el nivel de significación y toma la decisión estadística; el coeficiente de correlación y la regresión miden la relación entre las variables.', cite:'Capítulo 7 · 7.7.5 · p. 138; 7.12 · pp. 218-219', c:'(Bernal, 2010, p. 138)' }
+    ],
+    villanueva: [
+      { k:'Enfoque', v:'Cuantitativo', why:'Las variables se operacionalizan en dimensiones, indicadores e ítems, y las hipótesis se contrastan estadísticamente.', cite:'Cap. 6 · p. 41; Cap. 16 · p. 183', c:'(Villanueva, 2020, p. 183)' },
+      { k:'Tipo', v:'Básica', why:'Busca aportar conocimiento científico organizado y contrastar hipótesis o teorías sobre la relación entre variables, sin modificar la realidad estudiada.', cite:'Cap. 8 · 8.1 · p. 60', c:'(Villanueva, 2020, p. 60)' },
+      { k:'Nivel', v: corr ? 'Correlacional' : 'Explicativo', why: corr ? 'Mide el nivel de relación o asociación no causal entre dos o más variables.' : 'Busca el porqué de los hechos estableciendo relaciones causa-efecto mediante la prueba de hipótesis.', cite: corr ? 'Cap. 8 · p. 62' : 'Cap. 8 · p. 63', c: corr ? '(Villanueva, 2020, p. 62)' : '(Villanueva, 2020, p. 63)' },
+      { k:'Diseño', v: corr ? 'No experimental, transeccional y descriptivo-correlacional' : 'No experimental, transeccional correlacional-causal', why: corr ? 'No se manipulan las variables; los datos se recolectan en un solo momento y se describen las variables y su asociación.' : 'No se manipulan las variables; en un solo momento se analizan relaciones de causalidad sustentadas en hipótesis causales.', cite: corr ? 'Cap. 8 · 8.2.1 · pp. 66-67, 73' : 'Cap. 8 · 8.2.1 · p. 67', c: corr ? '(Villanueva, 2020, p. 73)' : '(Villanueva, 2020, p. 67)', scheme },
+      { k:'Población', v: popText, why:'Conjunto de elementos con atributos comunes; se precisan contenido, lugar, tiempo y accesibilidad, y se apoya en un marco poblacional.', cite:'Cap. 8 · 8.3 · p. 73', c:'(Villanueva, 2020, p. 73)' },
+      { k:'Muestra', v: sampleText, why: ss.censo ? 'Cuando se estudia a todos los elementos de la población se realiza un censo.' : 'Subconjunto representativo de la población; para población conocida (finita) se aplica la fórmula con Z = 1,96 (95 % de confianza).', cite: ss.censo ? 'Cap. 8 · 8.9 · p. 82' : 'Cap. 8 · 8.4 y 8.7 · pp. 73-75, 81', c: ss.censo ? '(Villanueva, 2020, p. 82)' : '(Villanueva, 2020, p. 81)', formula: ss.censo ? '' : formula },
+      { k:'Técnica e instrumento', v:'Técnica: encuesta · Instrumento: cuestionario (ítems por dimensión e indicador)', why:'La técnica orienta la recolección y el cuestionario es el instrumento de la encuesta; debe ser válido (juicio de expertos) y confiable (alfa de Cronbach).', cite:'Cap. 8 · p. 85; Cap. 13 · p. 127; Cap. 14 · pp. 147, 153', c:'(Villanueva, 2020, p. 127)' },
+      { k:'Análisis de datos', v: corr ? 'Coeficiente de correlación de Pearson o rho de Spearman' : reg, why:'Pruebas estadísticas para contrastar las hipótesis de relación o de influencia.', cite:'Cap. 15 · pp. 161, 168-171', c:'(Villanueva, 2020, p. 168)' }
+    ]
+  };
+  return M[a];
+}
+
+/* =========================================================
+   6. VALIDACIÓN
+   ========================================================= */
+function fieldLabel(key){
+  const map = { author:'Autor de referencia', nivel:'Alcance / nivel', tipo:'Tipo de variables', combo:'Tipo de combinación',
+    pob:'Población', N:'Tamaño de la población (N)', org:'Organización / empresa / rubro', lugar:'Lugar', anio:'Año', title:'Título' };
+  if (map[key]) return map[key];
+  const ol = operLabel(key); if (ol) return ol;
+  const p = key.split('.');
+  if (p[0] === 'vis') return p[2] === 'name' ? `Nombre de V${+p[1] + 1}` : `D${+p[3] + 1} de V${+p[1] + 1}`;
+  if (p[0] === 'vd') return p[1] === 'name' ? `Nombre de ${vdCode()}` : `D${+p[2] + 1} de ${vdCode()}`;
+  return key;
+}
+function stepOf(key){
+  if (key === 'author') return 1;
+  if (key === 'combo' || key === 'title') return 3;
+  if (/\.(src|def|ind|citaTipo)(\.|$)/.test(key)) return 4;
+  return 2;
+}
+function validateAll(){
+  const e = {}, s = state;
+  if (!s.author) e.author = 'Seleccione un autor para adaptar la terminología.';
+  if (!s.nivel) e.nivel = 'Seleccione el alcance: correlacional o explicativo.';
+  if (!s.tipo) e.tipo = 'Seleccione si el estudio es bivariado o multivariado.';
+  s.vis.forEach((v, i) => {
+    if (!clean(v.name)) e[`vis.${i}.name`] = 'Escriba el nombre de la variable.';
+    v.dims.forEach((d, j) => { if (!clean(d.name)) e[`vis.${i}.dims.${j}.name`] = 'Escriba la dimensión.'; });
+  });
+  if (!clean(s.vd.name)) e['vd.name'] = 'Escriba el nombre de la variable.';
+  s.vd.dims.forEach((d, j) => { if (!clean(d.name)) e[`vd.dims.${j}.name`] = 'Escriba la dimensión.'; });
+  if (!clean(s.pob)) e.pob = 'Indique la población (ej.: trabajadores, clientes).';
+  const N = parseInt(s.N, 10);
+  if (!String(s.N).trim()) e.N = 'Indique el tamaño de la población.';
+  else if (!N || N < 2) e.N = 'Debe ser un número entero mayor que 1.';
+  if (!clean(s.lugar)) e.lugar = 'Indique el lugar.';
+  const y = clean(s.anio);
+  if (!y) e.anio = 'Indique el año.';
+  else if (!/^(19|20)\d{2}$/.test(y)) e.anio = 'Escriba un año válido de 4 dígitos.';
+  if (!clean(s.org)) e.org = 'Indique la organización, empresa o rubro.';
+  if (!s.combo || !comboOptions().some(o => o.id === s.combo)) e.combo = 'Seleccione el tipo de combinación de variables y dimensiones.';
+  else if (s.combo === 'dim_dim' && s.vis.some(v => v.dims.length !== s.vd.dims.length))
+    e.combo = `Para emparejar dimensión con dimensión, cada variable debe tener el mismo número de dimensiones que ${vdCode()} (${s.vd.dims.length}).`;
+  validateOper(e);
+  if (Object.keys(e).length === 0){
+    const t = buildTitle();
+
+  }
+  return e;
+}
+function validateStep(n){
+  const all = validateAll(), e = {};
+  Object.keys(all).forEach(k => { if (stepOf(k) === n && k !== 'title') e[k] = all[k]; });
+  return e;
+}
+
+/* =========================================================
+   7. RENDER — STEPPER Y FORMULARIO
+   ========================================================= */
+const $ = id => document.getElementById(id);
+function icons(){ if (window.lucide) lucide.createIcons(); }
+const stepErrors = n => Object.keys(state.errors).filter(k => stepOf(k) === n).length;
+
+function renderStepper(){
+  const pct = (state.step - 1) / (STEPS.length - 1) * 100;
+  $('stepper').innerHTML = `<div class="relative">
+    <div class="absolute top-[18px] h-[3px] rounded-full bg-ink-100" style="left:${50 / STEPS.length}%;right:${50 / STEPS.length}%"></div>
+    <div class="absolute top-[18px] h-[3px] rounded-full bg-gradient-to-r from-indigo-600 to-blue-500 transition-all" style="left:${50 / STEPS.length}%;width:${pct * (1 - 1 / STEPS.length)}%"></div>
+    <ol class="relative grid" style="grid-template-columns:repeat(${STEPS.length},minmax(0,1fr))">${STEPS.map(s => {
+      const active = s.n === state.step, done = s.n < state.step, errs = stepErrors(s.n);
+      const circle = errs ? 'bg-red-500 text-white ring-4 ring-red-100'
+        : active ? 'bg-gradient-to-br from-indigo-600 to-blue-500 text-white ring-4 ring-indigo-100'
+        : done ? 'bg-emerald-500 text-white' : 'bg-white border-2 border-ink-200 text-ink-400';
+      return `<li><button type="button" data-step="${s.n}" class="w-full flex flex-col items-center text-center px-1">
+        <span class="h-9 w-9 rounded-full grid place-items-center text-sm font-extrabold transition ${circle}">${errs ? '!' : done ? '<i data-lucide="check" class="w-4 h-4"></i>' : s.n}</span>
+        <span class="mt-2 text-xs font-bold ${active ? 'text-ink-900' : 'text-ink-500'}">${s.label}</span>
+        <span class="text-[10.5px] text-ink-400 hidden sm:block">${s.desc}</span>
+      </button></li>`;
+    }).join('')}</ol></div>`;
+}
+const errHtml = key => state.errors[key] ? `<p class="err-msg" data-err="${key}"><i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>${esc(state.errors[key])}</p>` : '';
+const errCls = key => state.errors[key] ? ' has-error' : '';
+function sectionTitle(icon, title, sub){
+  return `<div class="mb-5 flex items-start gap-3">
+    <span class="h-11 w-11 shrink-0 rounded-2xl bg-gradient-to-br from-indigo-600 to-blue-500 text-white grid place-items-center shadow-soft"><i data-lucide="${icon}" class="w-5 h-5"></i></span>
+    <div><p class="text-[10.5px] font-bold uppercase tracking-[.14em] text-indigo-600">Paso ${state.step} de ${STEPS.length}</p>
+      <h2 class="font-display font-extrabold text-ink-900 text-lg leading-tight">${title}</h2>
+      ${sub ? `<p class="text-xs text-ink-500 mt-1 leading-relaxed">${sub}</p>` : ''}</div></div>`;
+}
+function card(n, title, sub, body){
+  return `<section class="rounded-2xl border border-ink-200 bg-white overflow-hidden">
+    <header class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-indigo-50/80 via-white to-white border-b border-ink-100">
+      <span class="h-7 w-7 shrink-0 rounded-full bg-indigo-600 text-white grid place-items-center text-xs font-extrabold">${n}</span>
+      <div class="min-w-0"><p class="font-display font-bold text-[14px] text-ink-900 leading-tight">${title}</p>${sub ? `<p class="text-[11px] text-ink-500 mt-0.5">${sub}</p>` : ''}</div>
+    </header>
+    <div class="p-4">${body}</div></section>`;
+}
+
+/* =========================================================
+   DESGLOSE DEL LIBRO: dónde trata cada autor cada tema (numeración impresa)
+   ========================================================= */
+const GUIDE = {
+  sampieri: [
+    ['Planteamiento', [
+      ['Enfoque cuantitativo', 'Cap. 1 · pp. 5-7', 'La ruta cuantitativa es secuencial y probatoria: mide variables y prueba hipótesis con estadística.'],
+      ['Problema de investigación', 'Cap. 3 · p. 41', 'El problema se formula como pregunta, de forma clara y sin ambigüedad.'],
+      ['Objetivos', 'Cap. 3 · p. 42', 'Verbos sugeridos: describir, determinar, demostrar, examinar, analizar, relacionar.'],
+      ['Título', 'Cap. 15 · p. 576', 'Breve e informativo; identifica las variables y suele tener entre 12 y 20 palabras.']
+    ]],
+    ['Alcance e hipótesis', [
+      ['Alcance correlacional', 'Cap. 5 · pp. 109-110', 'Conoce la relación o el grado de asociación entre dos o más variables.'],
+      ['Alcance explicativo', 'Cap. 5 · pp. 110-111', 'Establece las causas de los fenómenos.'],
+      ['Hipótesis correlacionales', 'Cap. 6 · pp. 127-128', 'Relacionan dos o más variables; el orden no importa y no hay VI ni VD.'],
+      ['Hipótesis causales (bivariadas y multivariadas)', 'Cap. 6 · pp. 130-131', 'Una o varias variables independientes con una dependiente (Figura 6.2).'],
+      ['Hipótesis nula', 'Cap. 6 · p. 133', 'Niega o refuta la relación planteada en la hipótesis de investigación.']
+    ]],
+    ['Diseño, población y muestra', [
+      ['Diseño no experimental transeccional correlacional-causal', 'Cap. 7 · pp. 176-179', 'Sin manipulación de variables y con datos recogidos en un solo momento.'],
+      ['Censo', 'Cap. 8 · p. 196', 'Con poblaciones pequeñas se puede incluir a todos los casos.'],
+      ['Población', 'Cap. 8 · pp. 198-199', 'Conjunto de casos que concuerdan con especificaciones de contenido, lugar y tiempo.'],
+      ['Muestra probabilística y su tamaño', 'Cap. 8 · pp. 200-202, 212', 'Todos los elementos tienen la misma probabilidad de ser elegidos.']
+    ]],
+    ['Instrumentos y análisis', [
+      ['Operacionalización', 'Cap. 9 · p. 243', 'De la variable a las dimensiones, los indicadores y los ítems.'],
+      ['Cuestionario', 'Cap. 9 · p. 250', 'Instrumento más usado para recolectar datos cuantitativos.'],
+      ['Escala tipo Likert', 'Cap. 9 · p. 273', 'Mide actitudes mediante afirmaciones con categorías de respuesta.'],
+      ['Confiabilidad (alfa de Cronbach)', 'Cap. 10 · p. 324', 'Consistencia interna del instrumento.'],
+      ['Correlación de Pearson', 'Cap. 10 · pp. 345-346', 'Relación entre dos variables medidas por intervalos o razón.'],
+      ['Regresión múltiple', 'Cap. 10 · p. 371', 'Efecto de varias variables independientes sobre la dependiente.']
+    ]]
+  ],
+  vara: [
+    ['Planteamiento', [
+      ['Hipótesis: ¿qué?, ¿en quién?, ¿dónde?', 'Paso 2 · 2.10.4 · pp. 184-185', 'La hipótesis responde al problema e indica qué existe, en quién y en dónde.'],
+      ['Una hipótesis por objetivo', 'Paso 2 · 2.10.6 · p. 187', 'Habrá tantas hipótesis como objetivos planteados.'],
+      ['Problema y técnica estructural', 'Paso 3 · 3.2 · pp. 206-208', 'Criterios de coherencia, simplicidad, especificidad y unicidad (Tabla 3.4); el problema amplio se divide en áreas.'],
+      ['Objetivos', 'Paso 3 · 3.3 · pp. 213-214', 'A cada problema le corresponde un objetivo; inician con verbo en infinitivo.'],
+      ['Título', 'Paso 3 · 3.5 · Tabla 3.6 · pp. 226-227', 'Informativo, sin siglas ni frases redundantes; máximo 20 palabras.']
+    ]],
+    ['Tipo y diseño', [
+      ['Investigación básica y aplicada', 'Paso 4 · Tabla 4.1 · pp. 235-236', 'La básica genera conocimiento; la aplicada resuelve problemas concretos.'],
+      ['Diseños generales y específicos', 'Paso 4 · Tabla 4.2 · pp. 236-237', 'Exploratorios, descriptivos y explicativos, con sus subdiseños.'],
+      ['Enfoque cuantitativo', 'Paso 4 · Tabla 4.3 · pp. 239-240', 'Mide y estima valores con instrumentos estructurados y estadística.'],
+      ['Diseño descriptivo-correlacional', 'Paso 4 · 4.1.4 · Tabla 4.5 · pp. 244-246', 'Grado de asociación entre variables; sospecha, pero no afirma, causalidad.'],
+      ['Diseño explicativo', 'Paso 4 · 4.1.5 · pp. 247-249', 'Causas de los fenómenos; asociación, precedencia y ausencia de explicaciones alternativas.']
+    ]],
+    ['Población y muestra', [
+      ['Población y criterios de inclusión', 'Paso 4 · 4.2 · pp. 261-263', 'Conjunto de individuos con propiedades comunes, delimitado con criterios.'],
+      ['Trabajar con toda la población', 'Paso 4 · 4.2.1 · p. 262', 'Si la población es pequeña y accesible, se estudia completa.'],
+      ['Tamaño de muestra', 'Paso 4 · 4.2.4 · pp. 268-270', 'Se calcula con fórmula según la confianza y el error deseados.']
+    ]],
+    ['Instrumentos y análisis', [
+      ['Matriz de operacionalización', 'Paso 4 · p. 308', 'Organiza los ítems por variable y dimensión; respalda la validez de constructo.'],
+      ['Cuestionarios y escalas', 'Paso 4 · 4.3.5 · p. 309', 'Instrumentos estructurados de los diseños cuantitativos.'],
+      ['Fiabilidad', 'Paso 4 · 4.4.6 · p. 394', 'Consistencia interna (alfa de Cronbach).'],
+      ['Validez', 'Paso 4 · 4.4.7 · p. 402', 'Criterio de jueces y validez de constructo.'],
+      ['Análisis cuantitativo', 'Paso 5 · 5.3.3 · p. 474', 'Pearson, Spearman, chi cuadrado y regresión.']
+    ]]
+  ],
+  villanueva: [
+    ['Planteamiento', [
+      ['Título', 'Cap. 2 · 2.3 · pp. 11-12', 'Variables unidas por un conector, sujetos-contexto y tiempo.'],
+      ['Formulación del problema', 'Cap. 3 · 3.1.2 · pp. 22-23', 'La pregunta no debe responderse con un simple sí o no.'],
+      ['Formas según el nivel', 'Cap. 3 · 3.2 · pp. 24-25', '«¿Qué relación existe…?» (correlacional) y «¿De qué manera… influye…?» (explicativo).'],
+      ['Objetivos', 'Cap. 7 · 7.3-7.4 · pp. 56-57', 'A cada problema le corresponde un objetivo.'],
+      ['Matriz de consistencia', 'Cap. 10 · pp. 96-99', 'Los problemas específicos relacionan las dimensiones de la VI con la VD (p. 98).']
+    ]],
+    ['Hipótesis y variables', [
+      ['Hipótesis correlacionales', 'Cap. 6 · 6.4 · pp. 41-42', 'Relación entre dos o más variables.'],
+      ['Hipótesis bivariadas y multivariadas', 'Cap. 6 · p. 43', 'Una o varias variables independientes con una dependiente.'],
+      ['Hipótesis nula', 'Cap. 6 · pp. 43-44', 'Niega la relación planteada.'],
+      ['Hipótesis general y específicas', 'Cap. 6 · 6.6 · pp. 45-46', 'Las específicas se derivan de las dimensiones de la VI.'],
+      ['Operacionalización de variables', 'Cap. 6 · 6.10-6.11 · pp. 50-52', 'Definición conceptual, operacional, dimensiones e indicadores.']
+    ]],
+    ['Tipo, nivel y diseño', [
+      ['Investigación básica', 'Cap. 8 · 8.1 · p. 60', 'Aporta conocimiento y contrasta teorías.'],
+      ['Nivel correlacional', 'Cap. 8 · p. 62', 'Relación o asociación no causal entre variables.'],
+      ['Nivel explicativo', 'Cap. 8 · p. 63', 'El porqué de los hechos: relaciones causa-efecto.'],
+      ['Diseño no experimental transeccional', 'Cap. 8 · 8.2.1 · pp. 66-67, 73', 'Descriptivo-correlacional o correlacional-causal, en un solo momento.']
+    ]],
+    ['Población, instrumentos y análisis', [
+      ['Población y muestra', 'Cap. 8 · 8.3-8.4 · pp. 73-75', 'Elementos con atributos comunes y subconjunto representativo.'],
+      ['Tamaño de muestra y censo', 'Cap. 8 · 8.7 y 8.9 · pp. 81-82', 'Fórmula para población finita (Z = 1,96) y censo.'],
+      ['Técnicas e instrumentos', 'Cap. 8 · 8.12-8.13 · pp. 85, 88', 'Encuesta y cuestionario.'],
+      ['Cuestionario', 'Cap. 13 · 13.3 · p. 127', 'Elaboración del cuestionario.'],
+      ['Validez y confiabilidad', 'Cap. 14 · pp. 147, 153', 'Juicio de expertos y alfa de Cronbach.'],
+      ['Análisis y contrastación de hipótesis', 'Cap. 15-16 · pp. 161-171, 183', 'Pearson, Spearman y regresión.']
+    ]]
+  ],
+  bernal: [
+    ['Planteamiento', [
+      ['Método cuantitativo', 'Cap. 6 · 6.1 · p. 60', 'Medición de los fenómenos y postulados deductivos sobre relaciones entre variables.'],
+      ['Título', 'Cap. 7 · 7.1.4 · p. 83', 'General en cuanto al tema y específico en cuanto al problema.'],
+      ['Enunciar y formular el problema', 'Cap. 7 · 7.2 · pp. 88-89', 'Pregunta general y preguntas específicas (subpreguntas).'],
+      ['Objetivos', 'Cap. 7 · 7.3.1 · pp. 97-98', 'Verbos en infinitivo; el general responde al título y al problema.']
+    ]],
+    ['Tipos de investigación', [
+      ['Clasificación de tipos', 'Cap. 7 · 7.5 · p. 110', 'Histórica, documental, descriptiva, correlacional, explicativa, estudio de caso y experimental.'],
+      ['Investigación correlacional', 'Cap. 7 · 7.5.4 · p. 114', 'Examina asociaciones entre variables, no relaciones causales.'],
+      ['Investigación explicativa o causal', 'Cap. 7 · 7.5.5 · p. 115', 'Prueba de hipótesis; causas y efectos entre variables.'],
+      ['Investigación seccional o transversal', 'Cap. 7 · 7.5.8 · p. 118', 'La información se obtiene una única vez.']
+    ]],
+    ['Hipótesis y variables', [
+      ['Formulación de hipótesis', 'Cap. 7 · 7.7.1 · p. 136', 'Se formulan cuando se evalúa relación entre variables o se explican causas.'],
+      ['Clases: HA (trabajo) y Ho (nula)', 'Cap. 7 · 7.7.4 · p. 137', 'Hipótesis de trabajo o alterna e hipótesis nula.'],
+      ['Prueba de hipótesis', 'Cap. 7 · 7.7.5 · p. 138', 'Ho y HA, nivel de significación y decisión estadística.'],
+      ['Variables independiente, dependiente e interviniente', 'Cap. 7 · 7.7.6 · pp. 139-140', 'Causa, efecto y factores que intervienen.'],
+      ['Conceptuación y operacionalización', 'Cap. 7 · 7.7.7 · p. 141', 'Definir la variable y traducirla a indicadores.']
+    ]],
+    ['Población, instrumentos y análisis', [
+      ['Población', 'Cap. 7 · 7.9.1 · p. 160', 'Conjunto de todos los elementos a los que se refiere la investigación.'],
+      ['Muestreo proporcional', 'Cap. 7 · Casos y talleres · pp. 179-180', 'Tamaño de muestra con error de estimación no mayor al 6 %.'],
+      ['Encuesta', 'Cap. 7 · 7.10.2 · p. 194', 'Se fundamenta en un cuestionario.'],
+      ['Confiabilidad y validez', 'Cap. 9 · 9.1.1 · pp. 247-248', 'Requisitos del instrumento de medición.'],
+      ['Diseño de cuestionarios', 'Cap. 9 · 9.2 · p. 250', 'Conjunto de preguntas para alcanzar los objetivos.'],
+      ['Correlación y regresión', 'Cap. 7 · 7.12 · pp. 218-219', 'Coeficiente de correlación (r) y de determinación (r²).']
+    ]]
+  ]
+};
+function guideHtml(id){
+  const A = AUTHORS[id], G = GUIDE[id];
+  return `<div class="fade-in mt-4 rounded-2xl border-2 border-indigo-200 bg-white overflow-hidden">
+    <div class="flex flex-wrap items-center gap-3 px-5 py-4 bg-gradient-to-r from-indigo-50 to-white border-b border-indigo-100">
+      <div class="h-10 w-10 shrink-0 rounded-xl bg-gradient-to-br ${A.gradient} text-white grid place-items-center font-display font-extrabold">${A.initials}</div>
+      <div class="min-w-0 flex-1"><p class="text-[10.5px] font-bold uppercase tracking-[.14em] text-indigo-600">Desglose del libro</p>
+        <p class="font-display font-bold text-ink-900 text-sm leading-snug">${esc(A.names)} (${A.year}) · <span class="italic font-semibold text-ink-600">${esc(A.book)}</span></p></div>
+      <button type="button" data-guide="${id}" class="text-xs font-semibold text-ink-500 hover:text-ink-900 inline-flex items-center gap-1"><i data-lucide="chevron-up" class="w-4 h-4"></i>Ocultar</button>
+    </div>
+    <div class="p-5 grid md:grid-cols-2 gap-x-8 gap-y-5">
+      ${G.map(([sec, items]) => `<div>
+        <p class="text-[11px] font-bold uppercase tracking-wider text-indigo-700 mb-2">${esc(sec)}</p>
+        <ul class="space-y-2">${items.map(([t, loc, idea]) => `<li class="flex gap-2">
+          <span class="text-indigo-400 font-bold leading-5">–</span>
+          <div class="min-w-0"><p class="text-[13px] text-ink-900 leading-snug"><b>${esc(t)}</b> <span class="inline-block align-middle ml-1 text-[10.5px] font-semibold px-1.5 py-0.5 rounded-md ${A.soft}">${esc(loc)}</span></p>
+            <p class="text-xs text-ink-500 leading-snug mt-0.5">${esc(idea)}</p></div></li>`).join('')}</ul>
+      </div>`).join('')}
+    </div>
+    <div class="px-5 py-3 border-t border-ink-100 bg-ink-50/60 text-[11.5px] text-ink-600"><b>Referencia APA 7:</b> <span class="pl-1">${A.apa}</span><span class="block text-[10.5px] text-ink-400 mt-0.5">Las páginas corresponden a la numeración impresa del libro.</span></div>
+  </div>`;
+}
+function renderStep1(){
+  return sectionTitle('library', 'Elija el autor metodológico', 'Toda la redacción (problemas, objetivos, hipótesis y metodología) se adaptará a la terminología y reglas de su libro. Use «Ver desglose del libro» para saber en qué capítulo y página trata cada tema.') +
+  `<div id="grp-author" class="grid md:grid-cols-2 gap-4 ${state.errors.author ? 'group-error' : ''}">` +
+  Object.values(AUTHORS).map(a => {
+    const sel = state.author === a.id, open = state.guide === a.id;
+    return `<div class="rounded-2xl border-2 ${sel ? 'border-indigo-500 bg-indigo-50/40 ring-4 ring-indigo-100' : 'border-ink-200 bg-white hover:border-ink-300'} flex flex-col transition">
+      <button type="button" data-author="${a.id}" class="choice w-full flex-1 text-left p-4">
+      <div class="flex gap-3">
+        <div class="h-11 w-11 shrink-0 rounded-xl bg-gradient-to-br ${a.gradient} text-white grid place-items-center font-display font-extrabold">${a.initials}</div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-start gap-2">
+            <p class="font-display font-bold text-ink-900 text-sm leading-snug">${esc(a.names)} <span class="text-ink-500 font-semibold">(${a.year})</span></p>
+            <span class="ml-auto shrink-0 h-5 w-5 rounded-full border-2 ${sel ? 'border-indigo-600 bg-indigo-600' : 'border-ink-300'} grid place-items-center">${sel ? '<i data-lucide="check" class="w-3 h-3 text-white"></i>' : ''}</span>
+          </div>
+          <p class="text-xs text-ink-600 italic mt-0.5">${esc(a.book)}</p>
+          <p class="text-xs text-ink-500 mt-2 leading-relaxed">${esc(a.summary)}</p>
+          <div class="flex flex-wrap gap-1.5 mt-2.5">${a.keys.map(k => `<span class="text-[10.5px] font-semibold px-2 py-0.5 rounded-full ${a.soft}">${esc(k)}</span>`).join('')}</div>
+        </div>
+      </div></button>
+      <button type="button" data-guide="${a.id}" class="mx-4 mb-3 mt-auto inline-flex items-center justify-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg border ${open ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-indigo-700 border-indigo-200 hover:bg-indigo-50'}">
+        <i data-lucide="${open ? 'chevron-up' : 'list-tree'}" class="w-4 h-4"></i>${open ? 'Ocultar desglose' : 'Ver desglose del libro'}</button>
+    </div>`;
+  }).join('') + `</div>${errHtml('author')}${state.guide ? `<div id="guidePanel">${guideHtml(state.guide)}</div>` : ''}`;
+}
+
+function bigChoice(group, value, icon, title, desc, selected){
+  return `<button type="button" data-choice="${group}" data-value="${value}" class="choice text-left rounded-2xl border-2 p-3.5 ${selected ? 'border-indigo-500 bg-indigo-50/50 ring-4 ring-indigo-100' : 'border-ink-200 bg-white hover:border-ink-300'}">
+    <div class="flex items-center gap-2"><span class="h-8 w-8 rounded-lg ${selected ? 'bg-indigo-600 text-white' : 'bg-ink-100 text-ink-600'} grid place-items-center"><i data-lucide="${icon}" class="w-4 h-4"></i></span>
+    <span class="font-display font-bold text-sm text-ink-900">${title}</span>
+    ${selected ? '<i data-lucide="check-circle-2" class="w-4 h-4 text-indigo-600 ml-auto"></i>' : ''}</div>
+    <p class="text-xs text-ink-500 mt-2 leading-relaxed">${desc}</p></button>`;
+}
+function seg(group, label, options, value){
+  return `<div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+    <span class="text-xs font-bold text-ink-700 w-[150px] shrink-0">${label}</span>
+    <div id="grp-${group}" class="inline-flex flex-1 min-w-[220px] rounded-xl bg-ink-100 p-1 gap-1 ${state.errors[group] ? 'group-error' : ''}">
+      ${options.map(([v, t, ic]) => `<button type="button" data-choice="${group}" data-value="${v}" class="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg transition ${value === v ? 'bg-white text-indigo-700 shadow-soft' : 'text-ink-500 hover:text-ink-800'}"><i data-lucide="${ic}" class="w-3.5 h-3.5"></i>${t}</button>`).join('')}
+    </div></div>${errHtml(group)}`;
+}
+const preview = (key, html) => `<p class="text-[11px] text-ink-500 mt-1 flex items-start gap-1 min-h-[14px]" data-preview="${key}">${html}</p>`;
+function previewHtml(key){
+  let v = '';
+  if (key === 'org'){
+    if (!clean(state.org)) return '';
+    const ctx = clean(state.pob) ? model().ctxFull.replace(/, *$/, '') : contract(orgPhrase(state.org) + placeConn(properNoun(state.lugar)));
+    return `<i data-lucide="sparkles" class="w-3 h-3 mt-0.5 text-indigo-500 shrink-0"></i><span>Se redactará: <b class="text-ink-800">«${esc(ctx)}»</b></span>`;
+  }
+  else if (key === 'pob') v = clean(state.pob) ? pobPhrase(state.pob) : '';
+  else { const o = key === 'vd' ? state.vd : state.vis[+key.split('.')[1]]; v = o && clean(o.name) ? withArt(o.name) : ''; }
+  return v ? `<i data-lucide="sparkles" class="w-3 h-3 mt-0.5 text-indigo-500 shrink-0"></i><span>Se redactará: <b class="text-ink-800">«${esc(v)}»</b></span>` : '';
+}
+function updatePreview(key){
+  const el = document.querySelector(`[data-preview="${CSS.escape(key)}"]`);
+  if (el){ el.innerHTML = previewHtml(key); icons(); }
+}
+function tipNivel(){
+  const a = state.author, nv = state.nivel;
+  if (a === 'sampieri' && nv === 'correlacional') return 'Hernández-Sampieri y Mendoza (2018, p. 128): en las hipótesis correlacionales no se distingue variable independiente de dependiente; las variables se nombran V1, V2… sin ese rótulo.';
+  if (a === 'vara' && nv === 'correlacional') return 'Vara (2015, p. 246) trata la correlación como un subdiseño descriptivo: el resultado indicará «diseño descriptivo-correlacional».';
+  if (a === 'bernal') return nv === 'correlacional' ? 'Bernal (2010, p. 114): la investigación correlacional examina asociaciones entre variables, no relaciones causales; las hipótesis se plantean como HA y Ho.' : 'Bernal (2010, p. 115): la investigación explicativa o causal se fundamenta en la prueba de hipótesis y analiza causas y efectos entre la variable independiente y la dependiente.';
+  if (a === 'villanueva') return 'Villanueva (2020, p. 98): los problemas específicos relacionan ordenadamente las dimensiones de la variable independiente con la dependiente.';
+  return 'Las primeras variables actúan como independientes (causas) y la última como dependiente (efecto).';
+}
+function roleOf(isVD){
+  if (isCorrS() || !state.nivel) return '';
+  return isVD ? 'dependiente' : 'independiente';
+}
+function varCard(v, path, code, isVD, removable, idx){
+  const role = roleOf(isVD);
+  return `<div class="rounded-2xl border border-ink-200 bg-white p-3.5 fade-in">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="h-7 min-w-[28px] px-1.5 rounded-full ${isVD ? 'bg-indigo-900' : 'bg-blue-600'} text-white grid place-items-center text-[11px] font-extrabold">${code}</span>
+      <p class="font-display font-bold text-sm text-ink-900">Variable ${code.slice(1)}${role ? ` <span class="text-ink-400 font-semibold text-xs">· ${role}</span>` : ''}</p>
+      ${removable ? `<button type="button" data-remove-vi="${idx}" class="ml-auto text-xs text-ink-500 hover:text-red-600 inline-flex items-center gap-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i>Quitar</button>` : ''}
+    </div>
+    <input type="text" data-bind="${path}.name" data-key="${path}.name" value="${esc(v.name)}" placeholder="Nombre de la variable ${code.slice(1)} (ej.: liderazgo transformacional)" class="field${errCls(path + '.name')}">
+    ${errHtml(path + '.name')}${preview(path, previewHtml(path))}
+    <div class="mt-2 pl-3 border-l-2 border-yellow-300 space-y-2">
+      <p class="text-[11px] font-bold uppercase tracking-wider text-yellow-700">Dimensiones de ${code}</p>
+      ${v.dims.map((d, j) => `<div><div class="flex gap-2 items-center">
+        <span class="text-[11px] font-bold text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-md px-1.5 py-1 w-9 text-center shrink-0">D${j + 1}</span>
+        <input type="text" data-bind="${path}.dims.${j}.name" data-key="${path}.dims.${j}.name" value="${esc(d.name)}" placeholder="Dimensión ${j + 1}" class="field !py-2${errCls(`${path}.dims.${j}.name`)}">
+        <button type="button" data-remove-dim="${path}|${j}" class="p-1.5 rounded-lg text-ink-400 hover:text-red-600 hover:bg-red-50 ${v.dims.length <= MIN_DIMS ? 'invisible' : ''}" title="Quitar dimensión"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>${errHtml(`${path}.dims.${j}.name`)}</div>`).join('')}
+      ${v.dims.length < MAX_DIMS ? `<button type="button" data-add-dim="${path}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1"><i data-lucide="plus" class="w-3.5 h-3.5"></i>Agregar dimensión</button>` : ''}
+    </div></div>`;
+}
+function refreshOrg(){ updatePreview('org'); updatePreview('pob'); }
+function renderStep2(){
+  const A = state.author ? AUTHORS[state.author] : null;
+  const multi = state.tipo === 'multivariada';
+  const c1 = `<div class="space-y-3">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2"><span class="text-xs font-bold text-ink-700 w-[150px] shrink-0">Enfoque</span>
+        <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200"><i data-lucide="lock" class="w-3.5 h-3.5"></i>Cuantitativo</span></div>
+      ${seg('nivel', A ? A.labels.nivel : 'Alcance de la investigación', [['correlacional', 'Correlacional', 'arrow-left-right'], ['explicativo', 'Explicativo', 'arrow-right']], state.nivel)}
+      ${seg('tipo', 'Tipo de variables', [['bivariada', 'Bivariada', 'git-commit-horizontal'], ['multivariada', 'Multivariada', 'git-merge']], state.tipo)}
+      ${A && state.nivel ? `<p class="text-[11.5px] text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 flex gap-2"><i data-lucide="info" class="w-4 h-4 shrink-0 mt-0.5"></i><span>${tipNivel()}</span></p>` : ''}
+    </div>`;
+  const c2 = `<div class="grid md:grid-cols-2 gap-4 items-start">
+      ${state.vis.map((v, i) => varCard(v, `vis.${i}`, `V${i + 1}`, false, multi && state.vis.length > MIN_VI_MULTI, i)).join('')}
+      ${multi && state.vis.length < MAX_VI ? `<button type="button" id="btnAddVI" class="w-full h-full min-h-[120px] rounded-xl border-2 border-dashed border-blue-300 text-blue-700 hover:bg-blue-50 py-2.5 text-sm font-semibold inline-flex items-center justify-center gap-2"><i data-lucide="plus-circle" class="w-4 h-4"></i>Agregar otra variable</button>` : ''}
+      ${varCard(state.vd, 'vd', vdCode(), true, false)}
+    </div>`;
+  const c3 = `<div class="space-y-3">
+      <div class="grid grid-cols-[1fr_110px] gap-3">
+        <div><label class="text-xs font-bold text-ink-700">Población <span class="text-red-500">*</span></label>
+          <input type="text" data-bind="pob" data-key="pob" value="${esc(state.pob)}" placeholder="trabajadores, clientes, docentes…" class="field mt-1.5${errCls('pob')}">${errHtml('pob')}${preview('pob', previewHtml('pob'))}</div>
+        <div><label class="text-xs font-bold text-ink-700">Tamaño (N) <span class="text-red-500">*</span></label>
+          <input type="number" min="2" step="1" data-bind="N" data-key="N" value="${esc(state.N)}" placeholder="120" class="field mt-1.5${errCls('N')}">${errHtml('N')}</div>
+      </div>
+      <div class="grid grid-cols-[1fr_110px] gap-3">
+        <div><label class="text-xs font-bold text-ink-700">Lugar <span class="text-red-500">*</span></label>
+          <input type="text" data-bind="lugar" data-key="lugar" value="${esc(state.lugar)}" placeholder="Huaraz" class="field mt-1.5${errCls('lugar')}">${errHtml('lugar')}</div>
+        <div><label class="text-xs font-bold text-ink-700">Año <span class="text-red-500">*</span></label>
+          <input type="text" inputmode="numeric" maxlength="4" data-bind="anio" data-key="anio" value="${esc(state.anio)}" placeholder="2026" class="field mt-1.5${errCls('anio')}">${errHtml('anio')}</div>
+      </div>
+      <div><label class="text-xs font-bold text-ink-700">Organización / empresa / rubro <span class="text-red-500">*</span></label>
+        <input type="text" data-bind="org" data-key="org" value="${esc(state.org)}" placeholder="Hotel El Tumi · Municipalidad Provincial de Huaraz · mypes textiles" class="field mt-1.5${errCls('org')}">${errHtml('org')}${preview('org', previewHtml('org'))}</div>
+    </div>`;
+  return sectionTitle('sliders-horizontal', 'Tituladora', 'Complete los tres bloques en orden. El título se construye en vivo y los artículos se colocan solos.') +
+    `<div class="space-y-4">
+      ${card(1, 'Enfoque, alcance y tipo de variables', '', c1)}
+      ${card(2, 'Variables y dimensiones', 'Escriba solo el nombre de cada variable y sus dimensiones.', c2)}
+      <div id="semHost"></div>
+      ${card(3, 'Población, lugar, año y organización', 'La aplicación reconoce si es una empresa, una organización o un rubro.', c3)}
+    </div>`;
+}
+
+function renderCombos(){
+  const opts = comboOptions(); const A = state.author ? AUTHORS[state.author] : null;
+  return `<div id="grp-combo" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 ${state.errors.combo ? 'group-error' : ''}">
+      ${opts.map(o => { const sel = state.combo === o.id; return `<button type="button" data-choice="combo" data-value="${o.id}" class="choice text-left rounded-xl border-2 p-3 ${sel ? 'border-indigo-500 bg-indigo-50/50 ring-4 ring-indigo-100' : 'border-ink-200 bg-white hover:border-ink-300'}">
+        <div class="flex items-start gap-2"><span class="font-display font-bold text-[13px] text-ink-900 leading-snug">${esc(o.name)}</span>${sel ? '<i data-lucide="check-circle-2" class="w-4 h-4 text-indigo-600 ml-auto shrink-0"></i>' : ''}</div>
+        <p class="text-[11px] text-ink-500 mt-1 leading-relaxed">${esc(o.desc)}</p>
+        <div class="flex flex-wrap items-center gap-1.5 mt-2">
+          <span class="font-mono text-[10.5px] bg-white border border-ink-200 rounded px-1.5 py-0.5">${esc(o.ex)}</span>
+          <span class="text-[10.5px] font-semibold text-indigo-700">${pairs(o.id).length} específicos</span>
+          ${o.rec ? '<span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Recomendada</span>' : ''}
+        </div></button>`; }).join('')}
+    </div>${errHtml('combo')}
+    ${A && state.nivel ? `<div class="mt-3 rounded-xl ${A.soft} p-3 text-[11.5px] leading-relaxed flex gap-2"><i data-lucide="book-open" class="w-4 h-4 shrink-0 mt-0.5"></i><span>${esc(A.comboNote[state.nivel])}</span></div>` : ''}`;
+}
+function statementsReady(){
+  const e = validateAll();
+  return !Object.keys(e).some(k => k !== 'title' && stepOf(k) < 4);
+}
+function renderStatements(){
+  if (!statementsReady()) return `<div class="rounded-xl bg-ink-50 border border-ink-200 p-4 text-xs text-ink-600 flex gap-2"><i data-lucide="info" class="w-4 h-4 shrink-0"></i>Complete el autor y la tituladora (pasos 1 y 2) para ver aquí los problemas, objetivos e hipótesis redactados.</div>`;
+  const { L, general, specific, A } = buildMatrix(); const nC = A.labels.codeH0;
+  const tabs = [['p', 'Problemas'], ['o', 'Objetivos'], ['h', 'Hipótesis']];
+  const t = state.tab || 'p';
+  const gen = t === 'p' ? [L.pg, L.codeP, general.p] : t === 'o' ? [L.og, L.codeO, general.o] : [L.hg, L.codeH, general.h];
+  const spT = t === 'p' ? [L.pe, L.codePE] : t === 'o' ? [L.oe, L.codeOE] : [L.he, L.codeHE];
+  return `<div class="inline-flex rounded-xl bg-ink-100 p-1 gap-1 mb-3">${tabs.map(([k, n]) => `<button type="button" data-tab="${k}" class="text-xs font-bold px-3 py-1.5 rounded-lg ${t === k ? 'bg-white text-indigo-700 shadow-soft' : 'text-ink-500'}">${n}</button>`).join('')}</div>
+    <div class="rounded-xl border border-ink-200 bg-white p-3.5 space-y-3">
+      <div><p class="text-[10.5px] font-bold uppercase tracking-wider text-indigo-600">${gen[0]}</p>
+        <p class="text-[13px] text-ink-900 leading-relaxed mt-1"><b>${gen[1]}:</b> ${esc(gen[2])}</p>
+        ${t === 'h' && general.h0 ? `<p class="text-xs text-ink-500 mt-1"><b>${nC}:</b> ${esc(general.h0)}</p>` : ''}</div>
+      <div><p class="text-[10.5px] font-bold uppercase tracking-wider text-indigo-600">${spT[0]}</p>
+        <ol class="mt-1 space-y-2">${specific.map(r => `<li class="text-[12.5px] text-ink-800 leading-relaxed"><b>${spT[1]}${r.k}:</b> ${esc(t === 'p' ? r.p : t === 'o' ? r.o : r.h)} <span class="font-mono text-[10px] text-ink-400">(${esc(r.tag)})</span>${t === 'h' && r.h0 ? `<span class="block text-xs text-ink-500"><b>${nC}${r.k}:</b> ${esc(r.h0)}</span>` : ''}</li>`).join('')}</ol></div>
+    </div>`;
+}
+function renderStep3(){
+  const head = state.nivel === 'explicativo' ? 'Relación causal (→)' : state.nivel ? 'Relación correlacional (↔)' : '';
+  return sectionTitle('git-fork', 'Combinación y enunciados', 'Elija cómo se cruzan variables y dimensiones; los enunciados se redactan al instante según el autor elegido.') +
+  `<div class="space-y-4">
+    ${card(1, 'Tipo de combinación', head, renderCombos())}
+    <div id="semHost"></div>
+    ${card(2, 'Problemas, objetivos e hipótesis', 'Vista previa de lo que irá en la matriz de consistencia.', `<div id="stmtBox">${renderStatements()}</div>`)}
+    <div id="grp-title" class="rounded-2xl ${state.errors.title ? 'border-2 border-red-400 bg-red-50' : 'border border-indigo-200 bg-gradient-to-br from-indigo-50 to-white'} p-4">
+      <div class="flex items-center gap-2"><i data-lucide="heading" class="w-4 h-4 text-indigo-600"></i><p class="text-[11px] font-bold uppercase tracking-wider text-indigo-700">Título generado</p><span id="titleCounter2" class="ml-auto text-[11px] font-bold px-2 py-0.5 rounded-full"></span></div>
+      <p id="liveTitle2" class="font-display text-[15px] font-bold text-ink-900 mt-2 leading-snug"></p>
+      ${errHtml('title')}
+    </div>
+  </div>`;
+}
+
+function applyView(){
+  const b = document.body, final = state.view === 'final';
+  b.classList.toggle('v-final', final); b.classList.toggle('v-steps', !final);
+  [1, 2, 3, 4].forEach(n => b.classList.toggle('step-' + n, state.step === n));
+  const f = $('btnFinal'); if (f) f.classList.toggle('hidden', !state.generated);
+  requestAnimationFrame(fitSheet);
+}
+function setView(v){ state.view = v; applyView(); placeSem(); window.scrollTo({ top:0, behavior:'smooth' }); }
+// Coloca el modelo estructural dentro de los pasos 2 y 3, y en la vista final
+function placeSem(){
+  const card = $('semCard'); if (!card) return;
+  const host = $('semHost');
+  if (state.view !== 'final' && host) host.appendChild(card);
+  else if (card.parentElement !== $('rightPane')) $('rightPane').insertBefore(card, $('authorCard'));
+}
+function renderForm(){
+  applyView();
+  renderStepper();
+  const sc = $('semCard'); if (sc && sc.parentElement !== $('rightPane')) $('rightPane').insertBefore(sc, $('authorCard'));
+  $('stepBody').innerHTML = [null, renderStep1, renderStep2, renderStep3, renderStep4][state.step]();
+  placeSem();
+  $('btnPrev').disabled = state.step === 1;
+  $('btnNext').classList.toggle('hidden', state.step === STEPS.length);
+  icons(); updateLive();
+}
+
+/* =========================================================
+   PALETA FORMAL Y VISTA PREVIA DE LA HOJA
+   ========================================================= */
+// Temas de color de la plataforma (como los temas de Google). El documento mantiene el negro de APA 7.
+const THEMES = [['#2C4C77', 'Azul marino'], ['#1F5F6B', 'Azul petróleo'], ['#2F6B47', 'Verde institucional'], ['#7B2D3B', 'Burdeos'],
+                ['#3F4756', 'Gris grafito'], ['#6B5137', 'Sepia académico'], ['#4A3F8F', 'Índigo profundo']];
+let uiTheme = (() => { try { return localStorage.getItem('uiTheme') || THEMES[0][0]; } catch (e){ return THEMES[0][0]; } })();
+let paletteOpen = false;
+const apaColor = () => '#000000';
+function themeVars(hex){
+  const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  const mix = (t, a) => c.map((v, i) => Math.round(v * (1 - a) + t[i] * a));
+  const W = [255, 255, 255], K = [0, 0, 0];
+  return { 50:mix(W, .94), 100:mix(W, .87), 200:mix(W, .74), 300:mix(W, .56), 400:mix(W, .34), 500:mix(W, .15), 600:c, 700:mix(K, .18), 800:mix(K, .33), 900:mix(K, .48), 950:mix(K, .62) };
+}
+function applyTheme(hex){
+  const v = themeVars(hex), root = document.documentElement.style;
+  Object.entries(v).forEach(([k, rgb]) => root.setProperty(`--p${k}`, rgb.join(' ')));
+}
+function setTheme(hex){
+  uiTheme = hex; try { localStorage.setItem('uiTheme', hex); } catch (e){}
+  applyTheme(hex); renderPalette(); renderSVG();
+}
+function renderPalette(){
+  const name = (THEMES.find(p => p[0] === uiTheme) || THEMES[0])[1];
+  $('palettePanel').innerHTML = paletteOpen
+    ? `<div class="fade-in mr-3 w-64 rounded-2xl bg-white border border-ink-200 shadow-soft p-4">
+        <div class="flex items-center gap-2"><i data-lucide="palette" class="w-4 h-4 text-indigo-600"></i><p class="font-display font-bold text-sm text-ink-900">Tema de la plataforma</p>
+          <button type="button" data-pal="close" class="ml-auto p-1 rounded-md text-ink-400 hover:text-ink-800 hover:bg-ink-50"><i data-lucide="x" class="w-4 h-4"></i></button></div>
+        <p class="text-[11px] text-ink-500 mt-1 leading-snug">Personalice el color del simulador: encabezados, botones, pasos y resaltados.</p>
+        <div class="mt-3 grid grid-cols-4 gap-2">${THEMES.map(([c, n]) => `<button type="button" data-pal="${c}" title="${n}" class="group flex flex-col items-center gap-1">
+            <span class="h-10 w-10 rounded-full grid place-items-center transition ${c === uiTheme ? 'ring-2 ring-offset-2 ring-ink-400' : 'hover:scale-105'}" style="background:${c}">${c === uiTheme ? '<i data-lucide="check" class="w-4 h-4 text-white"></i>' : ''}</span>
+            <span class="text-[9.5px] leading-tight text-center text-ink-500">${n}</span></button>`).join('')}</div>
+        <p class="text-[10.5px] text-ink-400 mt-3 leading-snug">El Word y las tablas mantienen el negro que exige APA 7.</p>
+      </div>`
+    : `<button type="button" data-pal="open" title="Tema de la plataforma" class="flex flex-col items-center gap-2 rounded-l-2xl bg-white border border-r-0 border-ink-200 shadow-soft px-2 py-3 hover:bg-ink-50">
+        <i data-lucide="palette" class="w-4 h-4 text-indigo-600"></i>
+        <span class="h-4 w-4 rounded-full ring-2 ring-white shadow" style="background:${uiTheme}"></span>
+        <span class="text-[10px] font-bold text-ink-500 [writing-mode:vertical-rl] rotate-180 tracking-wider">Tema · ${esc(name)}</span>
+      </button>`;
+  icons();
+}
+
+const skel = (w, h = 10) => `<span class="block rounded bg-ink-100" style="width:${w}%;height:${h}px;margin:9px 0"></span>`;
+const ph = t => `<span style="color:#9aa3bd">${t}</span>`;
+function sheetStep1(){
+  if (!state.author) return `<p class="sh-h1">Base metodológica de la investigación</p>${skel(100)}${skel(96)}${skel(98)}${skel(60)}<p class="sh-note">Seleccione un autor para ver aquí el sustento metodológico de su investigación.</p>`;
+  const A = AUTHORS[state.author], D = state.nivel ? A.design[state.nivel] : null;
+  return `<p class="sh-h1">Base metodológica de la investigación</p>
+    <p class="sh-p">La presente investigación adopta el enfoque cuantitativo y se sustenta en los planteamientos metodológicos de ${esc(A.shortCite)} (${A.year}). ${D ? esc(D.text) + ' ' + esc(D.cite) : esc(A.summary)}</p>
+    <p class="sh-h2">Pautas de redacción adoptadas</p>
+    ${A.rules.map(r => `<p class="sh-p"><b>${esc(r[0])}.</b> ${esc(r[1])}</p>`).join('')}
+    <p class="sh-h1" style="margin-top:18px">Referencias</p>
+    <p class="sh-ref">${A.apa}</p>`;
+}
+function sheetStep2(){
+  const t = buildTitle(); const m = model();
+  const hasT = state.vis.some(v => clean(v.name)) || clean(state.vd.name) || clean(state.org);
+  const A = state.author ? AUTHORS[state.author] : null;
+  const v = x => x ? esc(x) : ph('—');
+  const varLine = (o, code, isVD) => `<p class="sh-p"><b>${code}:</b> ${clean(o.name) ? esc(cap(normCommon(o.name))) : ph('nombre de la variable')}${isCorrS() || !state.nivel ? '' : isVD ? ' (variable dependiente)' : ' (variable independiente)'}, con las dimensiones ${o.dims.some(d => clean(d.name)) ? esc(joinList(o.dims.map((d, j) => `D${j + 1} ${normCommon(d.name) || '…'}`))) : ph('D1, D2, D3…')}.</p>`;
+  return `<div style="text-align:center;margin:40px 0 28px">
+      <p class="sh-title">${hasT ? esc(t.text) : ph('Título de la investigación')}</p>
+    </div>
+    <p class="sh-h1">Datos de la investigación</p>
+    <p class="sh-p"><b>Enfoque:</b> cuantitativo. <b>${esc(A ? A.labels.nivel : 'Alcance')}:</b> ${v(state.nivel)}. <b>Tipo de estudio:</b> ${state.tipo ? tipoTxt() : ph('—')}.</p>
+    <p class="sh-h2">Variables y dimensiones</p>
+    ${state.vis.map((o, i) => varLine(o, `V${i + 1}`, false)).join('')}${varLine(state.vd, vdCode(), true)}
+    <p class="sh-h2">Población y contexto</p>
+    <p class="sh-p"><b>Población:</b> ${clean(state.pob) ? esc(`${clean(state.N) ? clean(state.N) + ' ' : ''}${normCommon(state.pob)}`) : ph('—')}. <b>Lugar:</b> ${v(properNoun(state.lugar))}. <b>Año:</b> ${v(clean(state.anio))}. <b>Organización / empresa / rubro:</b> ${clean(state.org) ? esc(orgPhrase(state.org)) : ph('—')}.</p>
+    ${clean(state.pob) && clean(state.org) ? `<p class="sh-p"><b>Contexto de redacción:</b> ${esc(m.ctxFull)}.</p>` : ''}`;
+}
+function sheetStep3(){
+  if (!statementsReady()) return `<p class="apa-label"><b>Tabla 1</b></p><p class="apa-label"><i>Matriz de consistencia</i></p>
+    <table style="width:100%;border-collapse:collapse"><tr>${['Problemas', 'Objetivos', 'Hipótesis', 'Variables y dimensiones', 'Metodología'].map(h => `<th style="border-top:1.5px solid var(--apa);border-bottom:1px solid var(--apa);color:var(--apa);padding:6px;font-size:13px">${h}</th>`).join('')}</tr>
+    <tr>${[0, 1, 2, 3, 4].map(() => `<td style="padding:6px;border-bottom:1.5px solid var(--apa)">${skel(90, 8)}${skel(70, 8)}${skel(80, 8)}</td>`).join('')}</tr></table>
+    <p class="sh-note">Complete los pasos 1 y 2 para ver la matriz de consistencia redactada.</p>`;
+  return matrixHtml();
+}
+function sheetStep4(){
+  const any = operVars().some(({ v }) => clean(v.name));
+  if (!any) return `<p class="sh-note">Complete las variables en el paso 2 para construir la tabla de operacionalización.</p>`;
+  return operHtml() + (state.author ? `<p class="sh-h1" style="margin-top:22px">Referencias</p>${refsHtml()}` : '');
+}
+function renderSheet(){
+  const sheet = $('sheet'); if (!sheet) return;
+  const land = state.step >= 3;
+  sheet.className = `sheet ${land ? 'sheet-land' : ''}`;
+  sheet.innerHTML = `<span class="sh-page">${state.step}</span>${[null, sheetStep1, sheetStep2, sheetStep3, sheetStep4][state.step]()}`;
+  const st = STEPS[state.step - 1];
+  const hasT = state.vis.some(v => clean(v.name)) || clean(state.vd.name) || clean(state.org);
+  const tw = state.step === 2 && hasT ? ` · título: ${buildTitle().words} palabras` : '';
+  $('sheetStep').textContent = `Paso ${st.n} · ${st.label}${tw}`;
+  fitSheet();
+}
+function fitSheet(){
+  const wrap = $('sheetWrap'), box = $('sheetBox'), sc = $('sheetScaler'), sheet = $('sheet');
+  if (!wrap || !sheet) return;
+  const avail = wrap.clientWidth - 32, w = sheet.offsetWidth;
+  const k = Math.min(1, avail / w);
+  sc.style.transform = `scale(${k})`;
+  box.style.width = `${w * k}px`; box.style.height = `${sheet.offsetHeight * k}px`;
+}
+window.addEventListener('resize', fitSheet);
+
+/* =========================================================
+   8. PANEL DERECHO — AUTOR, TÍTULO Y MODELO
+   ========================================================= */
+function renderAuthorCard(){
+  const box = $('authorCard');
+  if (!state.author){
+    box.innerHTML = `<div class="rounded-2xl border-2 border-dashed border-ink-200 bg-white p-5 flex items-center gap-4">
+      <span class="h-11 w-11 rounded-xl bg-ink-100 text-ink-500 grid place-items-center"><i data-lucide="book-open" class="w-5 h-5"></i></span>
+      <div><p class="font-display font-bold text-ink-900 text-sm">Sustento bibliográfico</p><p class="text-xs text-ink-500">Elija un autor en el paso 1 para ver qué dice sobre su diseño, el capítulo y la página exactos, y su referencia en APA 7.</p></div></div>`;
+    icons(); return;
+  }
+  const A = AUTHORS[state.author]; const D = state.nivel ? A.design[state.nivel] : null;
+  box.innerHTML = `<div class="relative rounded-2xl p-[2px] bg-gradient-to-br ${A.gradient} shadow-soft fade-in">
+    <div class="rounded-[14px] bg-white p-4 sm:p-5">
+      <div class="flex items-start gap-3">
+        <div class="h-11 w-11 shrink-0 rounded-xl bg-gradient-to-br ${A.gradient} text-white grid place-items-center font-display font-extrabold">${A.initials}</div>
+        <div class="min-w-0">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-ink-400">Sustento bibliográfico destacado</p>
+          <p class="font-display font-bold text-ink-900 text-sm leading-snug">${esc(A.names)} (${A.year})</p>
+          <p class="text-xs italic text-ink-500">${esc(A.book)}</p>
+        </div>
+      </div>
+      ${D ? `<div class="mt-4">
+        <p class="font-display font-bold text-ink-900 text-[15px]">¿Qué dice ${esc(A.shortCite)} sobre el diseño ${state.nivel}?</p>
+        <p class="text-[11.5px] font-semibold text-indigo-700 mt-0.5">${esc(D.title)}</p>
+        <p class="text-sm text-ink-700 leading-relaxed mt-2">${esc(D.text)} <span class="font-semibold text-ink-900">${esc(D.cite)}</span></p>
+        <div class="mt-3 flex flex-wrap gap-2">${D.refs.map(r => `<span class="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-lg ${A.soft}"><i data-lucide="bookmark" class="w-3.5 h-3.5"></i>${esc(r[0])} · ${esc(r[1])}</span>`).join('')}</div>
+      </div>` : `<p class="text-xs text-ink-500 mt-3 bg-ink-50 rounded-lg p-3">Seleccione el alcance (correlacional o explicativo) en el paso 2 para ver el sustento específico del diseño.</p>`}
+      <details class="mt-4">
+        <summary class="cursor-pointer text-xs font-bold text-ink-700 inline-flex items-center gap-1"><i data-lucide="list-checks" class="w-4 h-4 text-indigo-600"></i>Reglas de redacción que aplica el simulador</summary>
+        <ul class="mt-2 space-y-1.5">${A.rules.map(r => `<li class="text-xs text-ink-600 leading-relaxed"><span class="font-semibold text-ink-800">${r[0]}:</span> ${esc(r[1])}</li>`).join('')}</ul>
+      </details>
+      <div class="mt-4 rounded-xl bg-ink-50 border border-ink-200 p-3">
+        <div class="flex items-center gap-2 mb-1"><p class="text-[11px] font-bold uppercase tracking-wider text-ink-500">Referencia · APA 7.ª edición</p>
+          <button type="button" id="btnCopyRef" class="no-print ml-auto text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1"><i data-lucide="copy" class="w-3.5 h-3.5"></i>Copiar</button></div>
+        <p class="text-sm text-ink-800 pl-6 -indent-6 leading-relaxed">${A.apa}</p>
+      </div>
+    </div></div>`;
+  icons();
+}
+
+function updateLive(){
+  renderSheet();
+  const t = buildTitle();
+  const hasData = state.vis.some(v => clean(v.name)) || clean(state.vd.name) || clean(state.org);
+  const txt = hasData ? t.text : '';
+  const words = hasData ? t.words : 0, over = false;
+  ['liveTitle', 'liveTitle2'].forEach(id => { const el = $(id); if (el) el.textContent = txt || 'El título aparecerá aquí mientras completa la tituladora y las variables.'; });
+  $('liveTitle').classList.toggle('text-ink-400', !txt);
+  const cls = 'bg-emerald-100 text-emerald-700';
+  const badge = `${words} palabras`;
+  [['titleCounter', 'ml-auto text-xs font-bold px-2.5 py-1 rounded-full'], ['titleCounter2', 'ml-auto text-[11px] font-bold px-2 py-0.5 rounded-full']].forEach(([id, base]) => {
+    const el = $(id); if (!el) return;
+    el.textContent = badge; el.className = `${base} ${cls}${words ? '' : ' hidden'}`;
+  });
+  const A = state.author ? AUTHORS[state.author] : null;
+  $('titleHint').innerHTML = !hasData ? 'Formato tipo oración: mayúscula inicial y solo en nombres propios.'
+    : over ? '<span class="text-red-600 font-semibold">Supera las 20 palabras: abrevie los nombres de variables u organización.</span>'
+    : `Formato tipo oración${A ? ` · estructura según ${esc(A.shortCite)} (${A.year})` : ''}.`;
+  renderSVG();
+}
+
+function wrapWords(text, max){
+  const words = text.split(' '); const lines = []; let cur = '';
+  words.forEach(w => { if ((cur + ' ' + w).trim().length > max && cur){ lines.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); });
+  if (cur) lines.push(cur);
+  return lines.slice(0, 3);
+}
+const trunc = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+
+function renderSVG(){
+  const s = state, corr = s.nivel === 'correlacional';
+  const W = 940, rw = 182, rh = 32, gap = 12, R = 42, padTop = 34;
+  const viCx = 330, vdCx = 610, viRx = 24, vdRx = W - 24 - rw;
+  const blocks = []; let y = padTop;
+  s.vis.forEach((v, i) => {
+    const n = v.dims.length, dimsH = n * rh + (n - 1) * gap, contentH = Math.max(dimsH, 2 * R + 10);
+    const cy = y + contentH / 2;
+    blocks.push({ v, i, cy, dimTop: cy - dimsH / 2 });
+    y += contentH + 70;
+  });
+  const vdn = s.vd.dims.length, vdDimsH = vdn * rh + (vdn - 1) * gap;
+  let vdCy = (blocks[0].cy + blocks[blocks.length - 1].cy) / 2;
+  if (vdCy - vdDimsH / 2 < padTop) vdCy = padTop + vdDimsH / 2;
+  const H = Math.max(y - 30, vdCy + vdDimsH / 2 + 70);
+  const vdTop = vdCy - vdDimsH / 2, VD = vdCode();
+  const arrow = (x1, y1, x2, y2, cls, both) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${cls}" marker-end="url(#ah)" ${both ? 'marker-start="url(#ahs)"' : ''}/>`;
+  const toCircle = (x1, y1, cx, cy, r) => { const dx = cx - x1, dy = cy - y1, d = Math.hypot(dx, dy) || 1; return [cx - dx / d * (r + 3), cy - dy / d * (r + 3)]; };
+  const dimRect = (x, ry, j, name) => `<g><title>${esc(name || 'Dimensión ' + (j + 1))}</title><rect x="${x}" y="${ry}" width="${rw}" height="${rh}" rx="6" class="dim"/>
+      <rect x="${x + 4}" y="${ry + 6}" width="24" height="${rh - 12}" rx="4" class="dtag"/><text x="${x + 16}" y="${ry + rh / 2 + 4}" text-anchor="middle" class="dtagt">D${j + 1}</text>
+      <text x="${x + 34}" y="${ry + rh / 2 + 4}" class="dimt ${name ? '' : 'ph'}">${esc(trunc(name || 'dimensión ' + (j + 1), 24))}</text></g>`;
+  let out = '';
+  blocks.forEach(b => b.v.dims.forEach((d, j) => {
+    const ry = b.dimTop + j * (rh + gap); const [ex, ey] = toCircle(viRx + rw, ry + rh / 2, viCx, b.cy, R);
+    out += arrow(viRx + rw + 2, ry + rh / 2, ex, ey, 'dimline') + dimRect(viRx, ry, j, normCommon(d.name));
+  }));
+  s.vd.dims.forEach((d, j) => {
+    const ry = vdTop + j * (rh + gap); const [ex, ey] = toCircle(vdRx, ry + rh / 2, vdCx, vdCy, R);
+    out += arrow(vdRx - 2, ry + rh / 2, ex, ey, 'dimline') + dimRect(vdRx, ry, j, normCommon(d.name));
+  });
+  blocks.forEach((b, k) => {
+    const [sx, sy] = toCircle(vdCx, vdCy, viCx, b.cy, R), [ex, ey] = toCircle(viCx, b.cy, vdCx, vdCy, R);
+    out += s.nivel ? arrow(sx, sy, ex, ey, 'path', corr) : `<line x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}" class="path" stroke-dasharray="6 5"/>`;
+    const mx = (sx + ex) / 2, my = (sy + ey) / 2, n = s.vis.length > 1 ? k + 1 : '';
+    const sym = !s.nivel ? '?' : corr ? `r${n}` : `β${n}`;
+    out += `<g><rect x="${mx - 30}" y="${my - 12}" width="60" height="22" rx="11" class="pill"/><text x="${mx}" y="${my + 3}" text-anchor="middle" class="pillt">${sym} · H${n || 'G'}</text></g>`;
+  });
+  const circle = (cx, cy, label, name, role) => {
+    const lines = wrapWords(name || '', 22);
+    return `<g><circle cx="${cx}" cy="${cy}" r="${R}" class="lv"/><text x="${cx}" y="${cy + 5}" text-anchor="middle" class="lvl">${label}</text>
+      ${(lines.length ? lines : ['(sin nombre)']).map((l, i) => `<text x="${cx}" y="${cy + R + 17 + i * 14}" text-anchor="middle" class="lvn ${name ? '' : 'ph'}">${esc(l)}</text>`).join('')}
+      <text x="${cx}" y="${cy - R - 9}" text-anchor="middle" class="role">${role}</text></g>`;
+  };
+  const r1 = isCorrS() || !s.nivel ? 'VARIABLE' : 'V. INDEPENDIENTE', r2 = isCorrS() || !s.nivel ? 'VARIABLE' : 'V. DEPENDIENTE';
+  blocks.forEach(b => { out += circle(viCx, b.cy, `V${b.i + 1}`, normCommon(b.v.name), r1); });
+  out += circle(vdCx, vdCy, VD, normCommon(s.vd.name), r2);
+  $('semWrap').innerHTML = `<svg id="semSvg" viewBox="0 0 ${W} ${H}" width="100%" style="min-width:640px" xmlns="http://www.w3.org/2000/svg" font-family="Inter, Arial, sans-serif">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker>
+      <marker id="ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker>
+      <radialGradient id="lvg" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></radialGradient>
+    </defs>
+    <style>
+      .dim{fill:#fde047;stroke:#ca8a04;stroke-width:1.2} .dtag{fill:#ca8a04} .dtagt{font-size:9.5px;font-weight:800;fill:#fff}
+      .dimt{font-size:10.5px;fill:#422006;font-weight:600} .ph{fill:#94a3b8;font-style:italic;font-weight:500}
+      .dimline{stroke:#94a3b8;stroke-width:1.3} .path{stroke:#334155;stroke-width:2.2}
+      .lv{fill:url(#lvg);stroke:#1e3a8a;stroke-width:2} .lvl{font-size:15px;font-weight:800;fill:#fff}
+      .lvn{font-size:12px;font-weight:700;fill:#0f172a} .role{font-size:9px;font-weight:700;fill:#64748b;letter-spacing:.08em}
+      .pill{fill:#fff;stroke:#cbd5e1} .pillt{font-size:10.5px;font-weight:700;fill:#334155}
+    </style>${out}</svg>`;
+  const nd = s.vis.reduce((a, v) => a + v.dims.length, 0) + s.vd.dims.length;
+  $('semCaption').textContent = `Modelo ${s.tipo === 'multivariada' ? 'multivariado' : 'bivariado'} · ${s.vis.length + 1} variables (V1–${VD}) · ${nd} dimensiones · ` +
+    (s.nivel ? (corr ? 'relación correlacional (flechas bidireccionales ↔, coeficiente r).' : 'relación causal (flechas direccionales →, coeficiente β).') : 'elija el alcance para definir el sentido de las flechas.');
+}
+
+/* =========================================================
+   9. RESULTADOS
+   ========================================================= */
+const copyBtn = (id, label) => `<button type="button" data-copy="${id}" class="no-print ml-auto inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 px-2 py-1 rounded-lg hover:bg-indigo-50"><i data-lucide="copy" class="w-3.5 h-3.5"></i>${label || 'Copiar'}</button>`;
+function renderResults(){
+  const box = $('results');
+  if (!state.generated){
+    box.innerHTML = `<div class="rounded-2xl border-2 border-dashed border-ink-200 bg-white p-6 text-center">
+      <div class="mx-auto h-12 w-12 rounded-2xl bg-indigo-50 text-indigo-600 grid place-items-center"><i data-lucide="table-2" class="w-6 h-6"></i></div>
+      <p class="font-display font-bold text-ink-900 mt-3">Matriz de consistencia y desarrollo metodológico</p>
+      <p class="text-xs text-ink-500 mt-1 max-w-md mx-auto">Complete los cuatro pasos y pulse <b>Generar proyecto</b>. La aplicación validará que no quede ningún campo vacío antes de redactar los resultados.</p></div>`;
+    icons(); return;
+  }
+  const { m, A, L, general, specific } = buildMatrix(); const T = buildTitle(); const method = buildMethod();
+  const corrS = isCorrS(), nC = A.labels.codeH0;
+  const roleTxt = isVD => corrS ? '' : isVD ? ' · variable dependiente' : ' · variable independiente';
+  const varsCell = m.vis.map(v => `<p class="font-semibold text-ink-900">${v.label}: ${esc(cap(v.bare))}<span class="font-normal text-ink-500 text-[11px]">${roleTxt(false)}</span></p><ul class="mb-2 mt-0.5">${v.dims.map((d, j) => `<li><b class="text-yellow-700">D${j + 1}</b> ${esc(cap(normCommon(d.name)))}</li>`).join('')}</ul>`).join('') +
+    `<p class="font-semibold text-ink-900">${m.vd.label}: ${esc(cap(m.vd.bare))}<span class="font-normal text-ink-500 text-[11px]">${roleTxt(true)}</span></p><ul class="mt-0.5">${m.vd.dims.map((d, j) => `<li><b class="text-yellow-700">D${j + 1}</b> ${esc(cap(normCommon(d.name)))}</li>`).join('')}</ul>`;
+  const methodCell = method.filter(x => !x.k.startsWith('Análisis')).map(x => `<p class="mb-1.5"><span class="font-semibold text-ink-900">${x.k}:</span> ${esc(x.v)}</p>`).join('');
+  const rowsSpec = specific.map(r => `<tr>
+      <td><span class="code">${L.codePE}${r.k}</span>${esc(r.p)}<span class="block mt-1 text-[10px] font-mono text-ink-400">${esc(r.tag)}</span></td>
+      <td><span class="code">${L.codeOE}${r.k}</span>${esc(r.o)}</td>
+      <td><span class="code">${L.codeHE}${r.k}</span>${esc(r.h)}${r.h0 ? `<span class="h0"><b>${nC}${r.k}:</b> ${esc(r.h0)}</span>` : ''}</td></tr>`).join('');
+  const C = state.caratula;
+  box.innerHTML = `<div id="resultsInner" class="space-y-5 fade-in">
+    <div class="no-print sticky top-[76px] z-30 rounded-2xl bg-ink-900 text-white p-2.5 flex flex-wrap items-center gap-2 shadow-soft">
+      <span class="inline-flex items-center gap-2 text-sm font-semibold px-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>Proyecto generado</span>
+      <div class="ml-auto flex flex-wrap gap-2">
+        <button type="button" id="btnCopy" class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20"><i data-lucide="clipboard-copy" class="w-4 h-4"></i>Copiar todo</button>
+        <button type="button" id="btnWord" class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-500"><i data-lucide="file-text" class="w-4 h-4"></i>Descargar Word (APA 7)</button>
+      </div>
+    </div>
+
+    <details class="no-print rounded-2xl bg-white border border-ink-200 shadow-soft p-4">
+      <summary class="cursor-pointer text-sm font-display font-bold text-ink-900 inline-flex items-center gap-2"><i data-lucide="id-card" class="w-4 h-4 text-indigo-600"></i>Datos de la carátula para Word (opcional)</summary>
+      <p class="text-xs text-ink-500 mt-1">La portada sigue el formato de trabajo de estudiante APA 7: título en negrita y centrado, autor, filiación, curso, docente y fecha. Los campos vacíos se omiten.</p>
+      <div class="grid sm:grid-cols-2 gap-3 mt-3">
+        <input type="text" data-cara="estudiantes" value="${esc(C.estudiantes)}" placeholder="Nombre(s) del (de los) estudiante(s)" class="field">
+        <input type="text" data-cara="institucion" value="${esc(C.institucion)}" placeholder="Facultad / Universidad" class="field">
+        <input type="text" data-cara="curso" value="${esc(C.curso)}" placeholder="Curso o asignatura" class="field">
+        <input type="text" data-cara="docente" value="${esc(C.docente)}" placeholder="Docente / asesor(a)" class="field">
+      </div>
+    </details>
+
+    <div class="rounded-2xl bg-white border border-ink-200 shadow-soft p-5">
+      <div class="flex items-center"><p class="text-[11px] font-bold uppercase tracking-wider text-ink-400">Título oficial · ${T.words} palabras · formato tipo oración</p>${copyBtn('title')}</div>
+      <h2 class="font-display font-extrabold text-ink-900 text-lg sm:text-xl leading-snug mt-1">${esc(T.text)}</h2>
+      <p class="text-xs text-ink-500 mt-2">Redactado según ${esc(A.shortCite)} (${A.year}). Enfoque cuantitativo · ${esc(A.labels.nivel.toLowerCase())}: ${state.nivel} · estudio ${tipoTxt()} · combinación: ${esc(comboName())}.</p>
+    </div>
+
+    <div class="rounded-2xl bg-white border border-ink-200 shadow-soft p-4 sm:p-5">
+      <div class="flex flex-wrap items-start gap-2 mb-3"><div class="apa-cap"><p class="font-bold">Tabla 1</p><p class="italic">Matriz de consistencia</p></div>
+        <span class="text-[11px] text-ink-500 mt-1 ml-2">${specific.length} enunciados específicos · ${esc(comboName())}</span>${copyBtn('matriz', 'Copiar matriz')}</div>
+      <div class="overflow-x-auto scroll-thin">
+        <table class="matrix w-full border-collapse min-w-[980px]">
+          <thead><tr><th style="width:19%">Problemas</th><th style="width:17%">Objetivos</th><th style="width:21%">Hipótesis</th><th style="width:18%">Variables y dimensiones</th><th style="width:25%">Metodología</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><p class="text-[10px] font-bold uppercase text-ink-400 mb-1">${L.pg}</p><span class="code">${L.codeP}</span>${esc(general.p)}</td>
+              <td><p class="text-[10px] font-bold uppercase text-ink-400 mb-1">${L.og}</p><span class="code">${L.codeO}</span>${esc(general.o)}</td>
+              <td><p class="text-[10px] font-bold uppercase text-ink-400 mb-1">${L.hg}</p><span class="code">${L.codeH}</span>${esc(general.h)}${general.h0 ? `<span class="h0"><b>${nC}:</b> ${esc(general.h0)}</span>` : ''}</td>
+              <td rowspan="${specific.length + 2}">${varsCell}</td>
+              <td rowspan="${specific.length + 2}">${methodCell}</td>
+            </tr>
+            <tr><td class="!py-1.5 text-[10px] font-bold uppercase text-ink-500">${L.pe}</td><td class="!py-1.5 text-[10px] font-bold uppercase text-ink-500">${L.oe}</td><td class="!py-1.5 text-[10px] font-bold uppercase text-ink-500">${L.he}</td></tr>
+            ${rowsSpec}
+          </tbody>
+        </table>
+      </div>
+      ${state.author === 'vara' ? `<div class="mt-3 rounded-xl bg-emerald-50 border border-emerald-200 p-3 text-xs text-emerald-900"><b>Estructura de la hipótesis general (Vara, 2015, p. 185):</b> ¿Qué existe? ${state.nivel === 'correlacional' ? 'Relación directa' : 'Influencia directa'} entre ${esc(joinList(m.vis.map(v => v.bare)))} y ${esc(m.vd.bare)} · ¿En quién? En ${esc(m.pob)} · ¿En dónde? En ${esc(contract(m.org + placeConn(m.lugar)))}.</div>` : ''}
+      ${corrS ? `<div class="mt-3 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-900">En el alcance correlacional, Hernández-Sampieri y Mendoza (2018, p. 128) señalan que no se distingue variable independiente de dependiente; por ello las variables se nombran solo V1, V2…</div>` : ''}
+    </div>
+
+    <div class="rounded-2xl bg-white border border-ink-200 shadow-soft p-4 sm:p-5">
+      <div class="flex flex-wrap items-start gap-2 mb-3"><div class="apa-cap"><p class="font-bold">Tabla 2</p><p class="italic">Operacionalización de variables</p></div>${copyBtn('oper', 'Copiar tabla')}</div>
+      <div class="overflow-x-auto scroll-thin"><div class="min-w-[860px] text-[13px] text-ink-900">${operTableHtml(false)}</div></div>
+      <p class="apa-cap text-[13px] mt-2"><i>Nota.</i> Elaboración propia con base en los autores citados.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-3">
+      ${[['problemas', L.pg + ' y ' + L.pe.toLowerCase(), general.p, specific.map(r => [L.codePE + r.k, r.p]), L.codeP],
+         ['objetivos', L.og + ' y ' + L.oe.toLowerCase(), general.o, specific.map(r => [L.codeOE + r.k, r.o]), L.codeO],
+         ['hipotesis', L.hg + ' y ' + L.he.toLowerCase(), general.h, specific.map(r => [L.codeHE + r.k, r.h]), L.codeH]].map(([id, t, g, items, code]) => `
+        <div class="rounded-2xl bg-white border border-ink-200 shadow-soft p-4">
+          <div class="flex items-center"><p class="text-[11px] font-bold uppercase tracking-wider text-indigo-600">${esc(t)}</p>${copyBtn(id)}</div>
+          <p class="text-[13px] text-ink-900 mt-2 leading-relaxed"><b>${code}:</b> ${esc(g)}</p>
+          <ol class="mt-2 space-y-1.5">${items.map(([c, x]) => `<li class="text-xs text-ink-700 leading-relaxed"><b>${c}:</b> ${esc(x)}</li>`).join('')}</ol>
+        </div>`).join('')}
+    </div>
+
+    <div class="rounded-2xl bg-white border border-ink-200 shadow-soft p-4 sm:p-5 print-break">
+      <div class="flex items-center gap-2 mb-3"><i data-lucide="microscope" class="w-4 h-4 text-indigo-600"></i><h3 class="font-display font-bold text-ink-900">Desarrollo metodológico detallado</h3>${copyBtn('metodo')}</div>
+      <div class="grid sm:grid-cols-2 gap-3">
+        ${method.map(x => `<div class="rounded-xl border border-ink-200 p-3.5 bg-gradient-to-b from-white to-ink-50/60">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-indigo-600">${x.k}</p>
+          <p class="text-sm font-semibold text-ink-900 mt-1 leading-snug">${esc(x.v)}</p>
+          ${x.scheme ? `<p class="mt-2 font-mono text-xs bg-white border border-ink-200 rounded-lg px-2 py-1 inline-block">${esc(x.scheme)}</p>` : ''}
+          ${x.formula ? `<p class="mt-2 font-mono text-[11px] bg-white border border-ink-200 rounded-lg px-2 py-1">${esc(x.formula)}</p>` : ''}
+          <p class="text-xs text-ink-600 mt-2 leading-relaxed">${esc(x.why)} ${x.c ? `<span class="font-semibold text-ink-800">${esc(x.c)}</span>` : ''}</p>
+          <p class="text-[10.5px] text-ink-400 mt-1.5 inline-flex items-center gap-1"><i data-lucide="bookmark" class="w-3 h-3"></i>${esc(x.cite)}</p>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="rounded-2xl bg-white border border-ink-200 shadow-soft p-4 sm:p-5">
+      <div class="flex items-center gap-2 mb-2"><i data-lucide="quote" class="w-4 h-4 text-indigo-600"></i><h3 class="font-display font-bold text-ink-900">Referencias (APA 7.ª edición)</h3>${copyBtn('ref')}</div>
+      <div class="space-y-1.5">${allRefs().map(r => `<p class="text-sm text-ink-800 pl-8 -indent-8 leading-relaxed">${r.map(([t, it]) => it ? `<i>${esc(t)}</i>` : esc(t)).join('')}</p>`).join('')}</div>
+      ${missingRefs().length ? `<p class="text-[11px] text-amber-700 mt-2">Para incluir en Referencias a ${esc(joinList(missingRefs()))}, complete sus «Datos para la lista de referencias» en el paso 4.</p>` : ''}
+      <p class="text-[11px] text-ink-400 mt-2">Las páginas citadas corresponden a la numeración impresa del documento adjunto.</p>
+    </div>
+  </div>`;
+  icons();
+  $('btnCopy').onclick = copyAll;
+  $('btnWord').onclick = downloadWord;
+}
+
+/* =========================================================
+   OPERACIONALIZACIÓN DE VARIABLES · DEFINICIÓN CITADA EN APA 7
+   ========================================================= */
+const MAX_SRC = 3;
+function ensureOper(v){
+  if (!Array.isArray(v.src) || !v.src.length) v.src = [newSrc()];
+  if (!v.citaTipo) v.citaTipo = 'parafrasis';
+  if (!v.citaForma) v.citaForma = 'parentetica';
+  if (v.def === undefined) v.def = '';
+  v.dims.forEach(d => { if (d.ind === undefined) d.ind = ''; });
+  return v;
+}
+function operVars(){
+  return [...state.vis.map((v, i) => ({ v:ensureOper(v), code:`V${i + 1}`, path:`vis.${i}` })), { v:ensureOper(state.vd), code:vdCode(), path:'vd' }];
+}
+
+/* ---------- Citas APA 7 ---------- */
+const parseAutores = str => String(str || '').split(';').map(x => x.replace(/\s+/g, ' ').trim()).filter(Boolean);
+const surnameOf = a => { const i = a.indexOf(','); return (i > 0 ? a.slice(0, i) : a).trim(); };
+function citeNames(src){
+  const s = parseAutores(src.autores).map(surnameOf);
+  if (!s.length) return '';
+  if (s.length === 1) return s[0];
+  if (s.length === 2) return `${s[0]} y ${s[1]}`;
+  return `${s[0]} et al.`;
+}
+function yearOf(src){
+  const y = clean(src.anio);
+  return /^s\.?\s?f\.?$/i.test(y) ? 's. f.' : y;
+}
+function pageTxt(p){
+  p = clean(p).replace(/^p{1,2}\.?\s*/i, '');
+  if (!p) return '';
+  return /[-–,]/.test(p) ? `pp. ${p.replace(/\s*[-–]\s*/, '–')}` : `p. ${p}`;
+}
+const validSrcs = v => v.src.filter(s => clean(s.autores));
+const sortSrc = arr => [...arr].sort((a, b) => deacc(citeNames(a)).localeCompare(deacc(citeNames(b)), 'es'));
+const parenCite = srcs => '(' + srcs.map(s => `${citeNames(s)}, ${yearOf(s)}${pageTxt(s.pag) ? ', ' + pageTxt(s.pag) : ''}`).join('; ') + ')';
+const narrNames = srcs => joinList(srcs.map(s => `${citeNames(s)} (${yearOf(s)})`));
+function lowerFirst(t){
+  const w = t.split(' ')[0] || '';
+  const L = w.replace(LETTERS, '');
+  if (L.length >= 2 && L === L.toUpperCase()) return t;       // sigla
+  if (/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]/.test(w) && t.length > 1) return t.charAt(0).toLowerCase() + t.slice(1);
+  return t;
+}
+function indef(t){
+  const f = deacc((t.split(' ')[0] || '').toLowerCase());
+  if (/^(un|una|unos|unas|el|la|los|las|aquel|aquella|todo|toda|cualquier|cierto|cierta)$/.test(f)) return t;
+  const art = autoArt(t);
+  return `${{ el:'un', la:'una', los:'unos', las:'unas' }[art]} ${t}`;
+}
+function defText(v){
+  return String(v.def || '').replace(/\s+/g, ' ').trim().replace(/^["“”'«»]+|["“”'«»]+$/g, '').replace(/[.;:,\s]+$/, '');
+}
+// Definición sugerida automáticamente a partir de la variable, sus dimensiones y el autor elegido
+const AUTO_TPL = [
+  (V, D) => `${V} se entiende como un constructo que integra ${D}, dimensiones que permiten comprender su manifestación en el ámbito organizacional`,
+  (V, D) => `${V} se concibe como el conjunto de manifestaciones que se expresan a través de ${D}, aspectos que permiten observar y valorar su expresión en la organización`,
+  (V, D) => `${V} comprende ${D} como componentes que, en conjunto, explican su presencia en el ámbito organizacional`,
+  (V, D) => `${V} se define como un fenómeno organizacional que se evidencia en ${D}, elementos que orientan su medición en el contexto de estudio`
+];
+const srcComplete = s => clean(s.autores) && /^((19|20)\d{2}[a-z]?|s\.?\s?f\.?)$/i.test(clean(s.anio));
+function autoDef(v){
+  const srcs = sortSrc(v.src.filter(srcComplete));
+  const dims = v.dims.map(d => withArt(d.name)).filter(Boolean);
+  if (!srcs.length || !clean(v.name) || !dims.length) return '';
+  const idx = Math.max(0, operVars().findIndex(o => o.v === v)) % AUTO_TPL.length;
+  const body = AUTO_TPL[idx](withArt(v.name), joinRich(dims));
+  const page = srcs.length === 1 ? pageTxt(srcs[0].pag) : '';
+  const out = v.citaForma === 'narrativa'
+    ? `Según ${narrNames(srcs)}, ${body}${page ? ` (${page})` : ''}`
+    : `${cap(body)} ${parenCite(srcs)}`;
+  return cap(contract(out.replace(/\s+/g, ' ').trim())) + '.';
+}
+const isAutoDef = v => !defText(v);
+// Redacta la definición conceptual y la cita según APA 7
+function draftDef(v){
+  const t = defText(v); const srcs = sortSrc(validSrcs(v));
+  if (!t) return '';
+  if (!srcs.length || !clean(v.name)) return '';
+  const varArt = withArt(v.name), bare = normCommon(v.name);
+  const tl = deacc(t.toLowerCase());
+  const kind = (tl.startsWith(deacc(bare.toLowerCase())) || tl.startsWith(deacc(varArt.toLowerCase()))) ? 'oracion'
+    : /^(es|son|consiste|se define|se refiere|se entiende|comprende|implica|representa|constituye|alude)\b/i.test(t) ? 'verbo' : 'nominal';
+  const textual = v.citaTipo === 'textual', narr = v.citaForma === 'narrativa';
+  const pl = srcs.length > 1 || parseAutores(srcs[0].autores).length > 1;
+  const page = pageTxt(srcs[0].pag);
+  let out;
+  if (textual){
+    if (!narr){
+      out = kind === 'verbo' ? `${cap(varArt)} “${lowerFirst(t)}” ${parenCite(srcs)}` : `“${cap(t)}” ${parenCite(srcs)}`;
+    } else {
+      const N = `${citeNames(srcs[0])} (${yearOf(srcs[0])})`;
+      out = kind === 'nominal' ? `${N} ${pl ? 'definen' : 'define'} ${varArt} como “${t}”${page ? ` (${page})` : ''}`
+        : kind === 'verbo' ? `Para ${N}, ${varArt} “${lowerFirst(t)}”${page ? ` (${page})` : ''}`
+        : `Para ${N}, “${t}”${page ? ` (${page})` : ''}`;
+    }
+  } else if (!narr){
+    out = kind === 'verbo' ? `${cap(varArt)} ${t} ${parenCite(srcs)}` : `${cap(t)} ${parenCite(srcs)}`;
+  } else {
+    const N = narrNames(srcs), pg = srcs.length === 1 && page ? ` (${page})` : '';
+    out = kind === 'nominal' ? `${N} ${pl ? 'definen' : 'define'} ${varArt} como ${indef(lowerFirst(t))}${pg}`
+      : kind === 'verbo' ? `Según ${N}, ${varArt} ${t}${pg}`
+      : `Según ${N}, ${lowerFirst(t)}${pg}`;
+  }
+  return cap(contract(out.replace(/\s+/g, ' ').trim())) + '.';
+}
+const defWords = v => countWords(defText(v));
+
+/* ---------- Referencias APA 7 ---------- */
+function refAuthors(str){
+  const a = parseAutores(str).map(x => (/,\s*([A-ZÁÉÍÓÚÑ]\.?\s?)+$/.test(x) && !x.endsWith('.')) ? x + '.' : x);
+  if (a.length <= 1) return a[0] || '';
+  return a.slice(0, -1).join(', ') + ', y ' + a[a.length - 1];
+}
+// Devuelve la referencia en partes [[texto, cursiva]] o null si faltan datos
+function buildRef(s){
+  if (!clean(s.autores) || !clean(s.anio) || !clean(s.titulo)) return null;
+  const au = refAuthors(s.autores);
+  const parts = [[`${au}${/\.$/.test(au) ? '' : '.'} (${yearOf(s)}). `, false]];
+  const tit = clean(s.titulo), fte = clean(s.fuente), doi = clean(s.doi);
+  const tail = doi ? ` ${/^10\./.test(doi) ? 'https://doi.org/' + doi : doi}` : '';
+  if (s.rtipo === 'articulo'){
+    parts.push([`${tit}. `, false]);
+    if (fte) parts.push([`${fte}${clean(s.vol) ? ', ' + clean(s.vol) : ''}`, true]);
+    let rest = clean(s.num) ? `(${clean(s.num)})` : '';
+    if (clean(s.pags)) rest += `, ${clean(s.pags).replace(/\s*[-–]\s*/, '–')}`;
+    parts.push([`${rest}.${tail}`, false]);
+  } else if (s.rtipo === 'web'){
+    parts.push([tit, true]); parts.push([`.${fte ? ' ' + fte + '.' : ''}${tail}`, false]);
+  } else {
+    const m = tit.match(/^(.*?)\s*(\([^)]*ed\.?\))$/i);
+    if (m){ parts.push([m[1], true]); parts.push([` ${m[2]}.${fte ? ' ' + fte + '.' : ''}${tail}`, false]); }
+    else { parts.push([tit, true]); parts.push([`.${fte ? ' ' + fte + '.' : ''}${tail}`, false]); }
+  }
+  return parts;
+}
+const refPlain = parts => parts.map(p => p[0]).join('');
+function allRefs(){
+  const A = AUTHORS[state.author];
+  const list = [[[A.apaParts[0], false], [A.apaParts[1], true], [A.apaParts[2], false]]];
+  const seen = new Set([deacc(refPlain(list[0]).toLowerCase())]);
+  operVars().forEach(({ v }) => validSrcs(v).forEach(s => {
+    const r = buildRef(s); if (!r) return;
+    const k = deacc(refPlain(r).toLowerCase()); if (seen.has(k)) return;
+    seen.add(k); list.push(r);
+  }));
+  return list.sort((a, b) => deacc(refPlain(a)).localeCompare(deacc(refPlain(b)), 'es'));
+}
+function missingRefs(){
+  const out = [];
+  operVars().forEach(({ v }) => validSrcs(v).forEach(s => { if (!clean(s.titulo)) out.push(`${citeNames(s)} (${yearOf(s) || 's. f.'})`); }));
+  return [...new Set(out)];
+}
+
+/* ---------- Indicadores e ítems ---------- */
+const indList = d => String(d.ind || '').split(/\n|;/).map(x => x.replace(/\s+/g, ' ').trim().replace(/[.,]+$/, '')).filter(Boolean).map(x => cap(x));
+
+/* ---------- Validación del paso 4 ---------- */
+function validateOper(e){
+  operVars().forEach(({ v, path }) => {
+    v.src.forEach((s, k) => {
+      if (!clean(s.autores)) e[`${path}.src.${k}.autores`] = 'Escriba el autor (Apellido, I.).';
+      const y = clean(s.anio);
+      if (!y) e[`${path}.src.${k}.anio`] = 'Indique el año.';
+      else if (!/^((19|20)\d{2}[a-z]?|s\.?\s?f\.?)$/i.test(y)) e[`${path}.src.${k}.anio`] = 'Año de 4 dígitos o «s. f.».';
+    });
+    if (v.citaTipo === 'textual'){
+      if (v.src.length > 1) e[`${path}.citaTipo`] = 'Una cita textual corresponde a un solo autor; para varios autores use paráfrasis.';
+      else if (!clean(v.src[0].pag)) e[`${path}.src.0.pag`] = 'La cita textual exige página.';
+    }
+    if (!defText(v)) e[`${path}.def`] = v.citaTipo === 'textual' ? 'Escriba las palabras exactas del autor.' : 'Escriba el concepto parafraseado con sus propias palabras.';
+    v.dims.forEach((d, j) => { if (!indList(d).length) e[`${path}.dims.${j}.ind`] = 'Escriba al menos un indicador.'; });
+  });
+  return e;
+}
+function operLabel(key){
+  const m = key.match(/^(vis\.(\d+)|vd)\.(.+)$/); if (!m) return null;
+  const code = m[1] === 'vd' ? vdCode() : `V${+m[2] + 1}`, rest = m[3];
+  if (rest === 'def') return `Definición de ${code}`;
+  if (rest === 'citaTipo') return `Tipo de cita de ${code}`;
+  let r = rest.match(/^src\.(\d+)\.(autores|anio|pag)$/);
+  if (r) return `${{ autores:'Autor', anio:'Año', pag:'Página' }[r[2]]} de la cita de ${code}`;
+  r = rest.match(/^dims\.(\d+)\.ind$/);
+  if (r) return `Indicadores de D${+r[1] + 1} de ${code}`;
+  return null;
+}
+
+/* ---------- Paso 4 (interfaz) ---------- */
+function miniSeg(path, field, opts, val){
+  return `<div class="inline-flex rounded-lg bg-ink-100 p-0.5 gap-0.5">${opts.map(([k, n]) => `<button type="button" data-set="${path}.${field}" data-val="${k}" class="text-[11px] font-bold px-2.5 py-1 rounded-md ${val === k ? 'bg-white text-indigo-700 shadow-soft' : 'text-ink-500 hover:text-ink-800'}">${n}</button>`).join('')}</div>`;
+}
+function defPreviewHtml(v){
+  const d = draftDef(v);
+  if (!d) return `<span class="text-ink-400">Escriba el autor, el año y ${v.citaTipo === 'textual' ? 'la cita textual' : 'su paráfrasis'} para ver la cita en formato APA 7.</span>`;
+  const warn = v.citaTipo === 'textual' && defWords(v) >= 40 ? `<span class="block mt-1 text-[11px] text-amber-700">La cita tiene ${defWords(v)} palabras: en el texto, las citas de 40 o más palabras van en bloque. En la tabla conviene parafrasear.</span>` : '';
+  return `<span class="text-ink-800">${esc(d)}</span>${warn}`;
+}
+function srcRow(s, path, k, total){
+  const p = `${path}.src.${k}`;
+  return `<div class="rounded-xl border border-ink-200 bg-ink-50/50 p-3">
+    <div class="grid grid-cols-[1fr_92px_82px_auto] gap-2 items-start">
+      <div><label class="text-[11px] font-bold text-ink-600">Autor(es)</label>
+        <input type="text" data-bind="${p}.autores" data-key="${p}.autores" value="${esc(s.autores)}" placeholder="Whitmore, J." class="field mt-1 !py-2${errCls(p + '.autores')}">${errHtml(p + '.autores')}</div>
+      <div><label class="text-[11px] font-bold text-ink-600">Año</label>
+        <input type="text" maxlength="6" data-bind="${p}.anio" data-key="${p}.anio" value="${esc(s.anio)}" placeholder="2003" class="field mt-1 !py-2${errCls(p + '.anio')}">${errHtml(p + '.anio')}</div>
+      <div><label class="text-[11px] font-bold text-ink-600">Página</label>
+        <input type="text" data-bind="${p}.pag" data-key="${p}.pag" value="${esc(s.pag)}" placeholder="opc." class="field mt-1 !py-2${errCls(p + '.pag')}">${errHtml(p + '.pag')}</div>
+      <button type="button" data-remove-src="${path}|${k}" class="mt-6 p-1.5 rounded-lg text-ink-400 hover:text-red-600 hover:bg-red-50 ${total <= 1 ? 'invisible' : ''}" title="Quitar autor"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <details class="mt-2">
+      <summary class="cursor-pointer text-[11px] font-semibold text-indigo-600">Datos para la lista de referencias</summary>
+      <div class="grid sm:grid-cols-2 gap-2 mt-2">
+        <select data-bind="${p}.rtipo" class="sel !bg-white">${[['libro', 'Libro'], ['articulo', 'Artículo de revista'], ['web', 'Página web / documento']].map(([k2, n]) => `<option value="${k2}" ${s.rtipo === k2 ? 'selected' : ''}>${n}</option>`).join('')}</select>
+        <input type="text" data-bind="${p}.titulo" value="${esc(s.titulo)}" placeholder="Título de la obra o del artículo" class="field !py-2">
+        <input type="text" data-bind="${p}.fuente" value="${esc(s.fuente)}" placeholder="${s.rtipo === 'articulo' ? 'Nombre de la revista' : s.rtipo === 'web' ? 'Nombre del sitio web' : 'Editorial'}" class="field !py-2">
+        ${s.rtipo === 'articulo' ? `<div class="grid grid-cols-3 gap-2"><input type="text" data-bind="${p}.vol" value="${esc(s.vol)}" placeholder="Vol." class="field !py-2"><input type="text" data-bind="${p}.num" value="${esc(s.num)}" placeholder="N.°" class="field !py-2"><input type="text" data-bind="${p}.pags" value="${esc(s.pags)}" placeholder="Págs." class="field !py-2"></div>` : ''}
+        <input type="text" data-bind="${p}.doi" value="${esc(s.doi)}" placeholder="DOI o URL (opcional)" class="field !py-2 sm:col-span-2">
+      </div>
+    </details>
+  </div>`;
+}
+function operBody(v, path){
+  return `<div class="grid lg:grid-cols-2 gap-6 items-start">
+    <div>
+      <p class="text-[11px] font-bold uppercase tracking-wider text-ink-500 mb-2">Autor de referencia</p>
+      <div class="space-y-2">${v.src.map((s, k) => srcRow(s, path, k, v.src.length)).join('')}</div>
+      ${v.src.length < MAX_SRC ? `<button type="button" data-add-src="${path}" class="mt-2 text-xs font-semibold text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1"><i data-lucide="plus" class="w-3.5 h-3.5"></i>Agregar otro autor</button>` : ''}
+      <p class="text-[10.5px] text-ink-400 mt-1">Formato: <b>Apellido, I.</b> · varios autores de una misma obra se separan con «;».</p>
+      <div class="mt-4 grid sm:grid-cols-2 gap-3">
+        <div><p class="text-[11px] font-bold text-ink-600 mb-1">Tipo de cita</p>${miniSeg(path, 'citaTipo', [['parafrasis', 'Paráfrasis'], ['textual', 'Cita textual']], v.citaTipo)}</div>
+        <div><p class="text-[11px] font-bold text-ink-600 mb-1">Forma de la cita</p>${miniSeg(path, 'citaForma', [['parentetica', 'Parentética · (Pérez, 2023)'], ['narrativa', 'Narrativa · Pérez (2023)']], v.citaForma)}</div>
+      </div>${errHtml(path + '.citaTipo')}
+      <label class="block text-[11px] font-bold text-ink-600 mt-4">${v.citaTipo === 'textual' ? 'Cita textual: copie las palabras exactas del autor (sin comillas)' : 'Concepto parafraseado: escríbalo con sus propias palabras'} <span class="text-red-500">*</span></label>
+      <textarea data-bind="${path}.def" data-key="${path}.def" rows="4" class="field mt-1 !text-[13px]${errCls(path + '.def')}" placeholder="${v.citaTipo === 'textual' ? 'Palabras exactas del autor, tal como aparecen en la página indicada' : 'Ej.: Proceso de acompañamiento estructurado orientado al desarrollo del potencial de los trabajadores, con el fin de mejorar su desempeño.'}">${esc(v.def)}</textarea>${errHtml(path + '.def')}
+      <p class="text-[10.5px] text-ink-400 mt-1">${v.citaTipo === 'textual' ? 'La cita textual exige el número de página.' : 'Redactar con sus propias palabras evita similitud en Turnitin; el simulador solo da formato APA 7 a la cita.'}</p>
+      <div class="mt-3 rounded-xl bg-indigo-50/70 border border-indigo-100 p-3">
+        <p class="text-[10.5px] font-bold uppercase tracking-wider text-indigo-600 mb-1">Así quedará en la tabla · APA 7</p>
+        <p class="text-[13px] leading-relaxed" data-defprev="${path}">${defPreviewHtml(v)}</p>
+      </div>
+    </div>
+    <div>
+      <p class="text-[11px] font-bold uppercase tracking-wider text-ink-500 mb-2">Indicadores por dimensión <span class="normal-case font-semibold text-ink-400">(uno por línea)</span></p>
+      <div class="space-y-2">${v.dims.map((d, j) => `<div class="grid grid-cols-[130px_1fr] gap-2 items-start">
+        <div class="pt-2"><span class="text-[11px] font-bold text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-md px-1.5 py-0.5">D${j + 1}</span>
+          <p class="text-xs font-semibold text-ink-800 mt-1 leading-snug">${esc(cap(normCommon(d.name)) || 'Dimensión ' + (j + 1))}</p></div>
+        <div><textarea data-bind="${path}.dims.${j}.ind" data-key="${path}.dims.${j}.ind" rows="3" class="field !text-[12.5px] !py-2${errCls(`${path}.dims.${j}.ind`)}" placeholder="Claridad en los objetivos&#10;Desarrollo de habilidades&#10;Motivación por el aprendizaje">${esc(d.ind)}</textarea>${errHtml(`${path}.dims.${j}.ind`)}</div>
+      </div>`).join('')}</div>
+    </div>
+  </div>`;
+}
+function renderStep4(){
+  return sectionTitle('table-properties', 'Operacionalización de variables', 'Para cada variable, escriba el concepto con sus propias palabras e indique autor, año y página: el simulador le da formato a la cita según APA 7. Luego registre los indicadores de cada dimensión.') +
+    `<div class="space-y-4">${operVars().map(({ v, code, path }, i) => card(i + 1, `${code}: ${esc(cap(normCommon(v.name)) || 'Variable ' + code.slice(1))}`, 'Autor, definición conceptual e indicadores', operBody(v, path))).join('')}</div>`;
+}
+function updateOperLive(base){
+  const o = operVars().find(x => x.path === base); if (!o) return;
+  const p = document.querySelector(`[data-defprev="${base}"]`); if (p) p.innerHTML = defPreviewHtml(o.v);
+  icons();
+}
+
+/* ---------- Tabla APA (pantalla / copiar / respaldo) ---------- */
+function operTableHtml(forWord){
+  const f = forWord ? "font-family:'Times New Roman';font-size:10pt;line-height:1.15;" : '';
+  const col = forWord ? apaColor() : 'var(--apa)';
+  const th = `${f}border-top:1.5px solid ${col};border-bottom:1px solid ${col};color:${col};padding:5pt 6pt;font-weight:bold;text-align:center;vertical-align:middle;`;
+  const td = `${f}border:none;padding:4pt 6pt;vertical-align:middle;`;
+  const ov = operVars();
+  const rows = ov.map(({ v, code }, vi) => v.dims.map((d, j) => {
+    const lastVar = vi === ov.length - 1, last = lastVar && j === v.dims.length - 1, bl = `border-bottom:1.5px solid ${col};`;
+    const span = v.dims.length;
+    const first = j === 0 ? `<td rowspan="${span}" style="${td}text-align:center;${lastVar ? bl : ''}"><b>${code}:</b> ${esc(cap(normCommon(v.name)))}</td><td rowspan="${span}" style="${td}text-align:center;${lastVar ? bl : ''}">${esc(draftDef(v))}</td>` : '';
+    return `<tr>${first}<td style="${td}text-align:center;${last ? bl : ''}">${esc(cap(normCommon(d.name)))}</td><td style="${td}text-align:left;${last ? bl : ''}">${indList(d).map(esc).join('<br>')}</td></tr>`;
+  }).join('')).join('');
+  return `<table style="border-collapse:collapse;width:100%;table-layout:fixed"><colgroup><col style="width:16%"><col style="width:28%"><col style="width:18%"><col style="width:38%"></colgroup><thead><tr>${['Variables', 'Definición conceptual', 'Dimensiones', 'Indicadores'].map(h => `<th style="${th}">${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+}
+function operHtml(){
+  const P = "font-family:'Times New Roman';font-size:12pt;line-height:200%;margin:0;";
+  return `<p style="${P}margin-top:12pt"><b>Tabla 2</b></p><p style="${P}"><i>Operacionalización de variables</i></p>${operTableHtml(true)}
+<p style="${P}"><i>Nota.</i> Elaboración propia con base en los autores citados.</p>`;
+}
+function operText(){
+  return operVars().map(({ v, code }) => `${code}: ${cap(normCommon(v.name))}\nDefinición conceptual: ${draftDef(v)}\n` +
+    v.dims.map((d, j) => `  D${j + 1} ${cap(normCommon(d.name))} | Indicadores: ${indList(d).join('; ')}`).join('\n')).join('\n\n');
+}
+function refsHtml(){
+  return allRefs().map(r => `<p style="font-family:'Times New Roman';font-size:12pt;line-height:200%;margin:0;padding-left:1.27cm;text-indent:-1.27cm">${r.map(([t, it]) => it ? `<i>${esc(t)}</i>` : esc(t)).join('')}</p>`).join('');
+}
+
+/* =========================================================
+   10. TEXTOS PARA COPIAR
+   ========================================================= */
+// La cita parentética va antes del punto final (APA 7)
+const citeWhy = x => x.c ? `${x.why.replace(/\.\s*$/, '')} ${x.c}.` : x.why;
+function blocks(){
+  const { m, A, L, general, specific } = buildMatrix(); const T = buildTitle(); const method = buildMethod();
+  const nC = A.labels.codeH0, corrS = isCorrS();
+  const vline = (v, isVD) => `${v.label}: ${cap(v.bare)}${corrS ? '' : isVD ? ' (variable dependiente)' : ' (variable independiente)'}. Dimensiones: ${v.dims.map((d, j) => `D${j + 1} ${normCommon(d.name)}`).join('; ')}.`;
+  return {
+    title: T.text,
+    problemas: `${L.pg}\n${L.codeP}: ${general.p}\n\n${L.pe}\n` + specific.map(r => `${L.codePE}${r.k}: ${r.p}`).join('\n'),
+    objetivos: `${L.og}\n${L.codeO}: ${general.o}\n\n${L.oe}\n` + specific.map(r => `${L.codeOE}${r.k}: ${r.o}`).join('\n'),
+    hipotesis: `${L.hg}\n${L.codeH}: ${general.h}${general.h0 ? `\n${nC}: ${general.h0}` : ''}\n\n${L.he}\n` + specific.map(r => `${L.codeHE}${r.k}: ${r.h}${r.h0 ? `\n${nC}${r.k}: ${r.h0}` : ''}`).join('\n'),
+    variables: [...m.vis.map(v => vline(v, false)), vline(m.vd, true)].join('\n') + `\nCombinación aplicada: ${comboName()}.`,
+    metodo: method.map(x => `${x.k}: ${x.v}${x.formula ? `\nFórmula: ${x.formula}` : ''}\n${citeWhy(x)}`.trim()).join('\n\n'),
+    oper: operText(),
+    ref: allRefs().map(refPlain).join('\n')
+  };
+}
+function plainText(){
+  const b = blocks(); const A = AUTHORS[state.author];
+  return `TÍTULO\n${b.title}\n\nAutor de referencia: ${A.names} (${A.year}) · Enfoque cuantitativo · ${A.labels.nivel}: ${state.nivel} · Estudio ${tipoTxt()}\n\n` +
+    `MATRIZ DE CONSISTENCIA\n\n${b.problemas}\n\n${b.objetivos}\n\n${b.hipotesis}\n\nVARIABLES Y DIMENSIONES\n${b.variables}\n\nDESARROLLO METODOLÓGICO\n${b.metodo}\n\nOPERACIONALIZACIÓN DE VARIABLES\n${b.oper}\n\nREFERENCIAS (APA 7)\n${b.ref}\n`;
+}
+async function copyText(text, html){
+  try {
+    if (html && window.ClipboardItem && navigator.clipboard.write){
+      await navigator.clipboard.write([new ClipboardItem({ 'text/plain': new Blob([text], { type:'text/plain' }), 'text/html': new Blob([html], { type:'text/html' }) })]);
+    } else await navigator.clipboard.writeText(text);
+  } catch (e){
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (_) {} ta.remove();
+  }
+}
+async function copyAll(){
+  await copyText(plainText(), apaHtml());
+  toast('¡Copiado al portapapeles! Al pegarlo en Word conserva el formato APA 7.', 'ok');
+}
+async function copyBlock(id){
+  if (id === 'matriz'){ const b = blocks(); await copyText(`${b.problemas}\n\n${b.objetivos}\n\n${b.hipotesis}\n\n${b.variables}`, matrixHtml()); }
+  else if (id === 'oper') await copyText(blocks().oper, operHtml());
+  else if (id === 'ref') await copyText(blocks().ref, refsHtml());
+  else await copyText(blocks()[id]);
+  toast('Sección copiada al portapapeles.', 'ok');
+}
+
+/* =========================================================
+   11. HTML CON FORMATO APA (copiar con formato / respaldo .doc)
+   ========================================================= */
+function matrixHtml(){
+  const { m, A, L, general, specific } = buildMatrix(); const method = buildMethod(); const nC = A.labels.codeH0; const corrS = isCorrS();
+  const C = apaColor();
+  const td = "border:none;padding:3pt 5pt;vertical-align:top;font-family:'Times New Roman';font-size:10pt;line-height:1.15;";
+  const th = `border-top:1pt solid ${C};border-bottom:1pt solid ${C};padding:4pt 5pt;font-family:'Times New Roman';font-size:10pt;font-weight:bold;text-align:center;color:${C};`;
+  const vars = [...m.vis.map(v => [v, false]), [m.vd, true]].map(([v, isVD]) => `<b>${v.label}: ${esc(cap(v.bare))}</b>${corrS ? '' : isVD ? ' (dependiente)' : ' (independiente)'}<br>${v.dims.map((d, j) => `D${j + 1}: ${esc(cap(normCommon(d.name)))}`).join('<br>')}`).join('<br><br>');
+  const met = method.filter(x => !x.k.startsWith('Análisis')).map(x => `<b>${x.k}:</b> ${esc(x.v)}`).join('<br><br>');
+  const rows = specific.map((r, i) => `<tr><td style="${td}${i === specific.length - 1 ? `border-bottom:1pt solid ${C};` : ''}"><b>${L.codePE}${r.k}:</b> ${esc(r.p)}</td><td style="${td}${i === specific.length - 1 ? `border-bottom:1pt solid ${C};` : ''}"><b>${L.codeOE}${r.k}:</b> ${esc(r.o)}</td><td style="${td}${i === specific.length - 1 ? `border-bottom:1pt solid ${C};` : ''}"><b>${L.codeHE}${r.k}:</b> ${esc(r.h)}${r.h0 ? `<br><b>${nC}${r.k}:</b> ${esc(r.h0)}` : ''}</td></tr>`).join('');
+  return `<p style="font-family:'Times New Roman';font-size:12pt;line-height:200%;margin:0"><b>Tabla 1</b></p>
+<p style="font-family:'Times New Roman';font-size:12pt;line-height:200%;margin:0"><i>Matriz de consistencia</i></p>
+<table style="border-collapse:collapse;width:100%">
+<tr><th style="${th}">Problemas</th><th style="${th}">Objetivos</th><th style="${th}">Hipótesis</th><th style="${th}">Variables y dimensiones</th><th style="${th}">Metodología</th></tr>
+<tr><td style="${td}"><b>${L.pg}</b><br><b>${L.codeP}:</b> ${esc(general.p)}</td><td style="${td}"><b>${L.og}</b><br><b>${L.codeO}:</b> ${esc(general.o)}</td><td style="${td}"><b>${L.hg}</b><br><b>${L.codeH}:</b> ${esc(general.h)}${general.h0 ? `<br><b>${nC}:</b> ${esc(general.h0)}` : ''}</td><td style="${td}border-bottom:1pt solid ${C};" rowspan="${specific.length + 2}">${vars}</td><td style="${td}border-bottom:1pt solid ${C};" rowspan="${specific.length + 2}">${met}</td></tr>
+<tr><td style="${td}"><b>${L.pe}</b></td><td style="${td}"><b>${L.oe}</b></td><td style="${td}"><b>${L.he}</b></td></tr>
+${rows}</table>
+<p style="font-family:'Times New Roman';font-size:12pt;line-height:200%;margin:0"><i>Nota.</i> Elaboración propia con base en ${esc(A.shortCite)} (${A.year}). Combinación aplicada: ${esc(comboName())}.</p>`;
+}
+function apaHtml(){
+  const { m, A, L, general, specific } = buildMatrix(); const T = buildTitle(); const method = buildMethod(); const nC = A.labels.codeH0;
+  const base = "font-family:'Times New Roman';font-size:12pt;line-height:200%;margin:0;";
+  const p = t => `<p style="${base}text-indent:1.27cm;text-align:left">${t}</p>`;
+  const h1 = t => `<p style="${base}text-align:center"><b>${t}</b></p>`;
+  const h2 = t => `<p style="${base}"><b>${t}</b></p>`;
+  const D = A.design[state.nivel];
+  const cutPar = s => esc(s);
+  return `<div>
+${h1(esc(T.text))}
+${p(`La presente investigación es de enfoque cuantitativo, con ${esc(A.labels.nivel.toLowerCase())} ${state.nivel} y un estudio ${tipoTxt()}, y se sustenta en los planteamientos metodológicos de ${esc(A.shortCite)} (${A.year}).`)}
+${h1('Formulación del problema')}
+${h2(L.pg)}${p(cutPar(general.p))}
+${h2(L.pe)}${specific.map(r => p(`${L.codePE}${r.k}. ${esc(r.p)}`)).join('')}
+${h1('Objetivos')}
+${h2(L.og)}${p(esc(general.o))}
+${h2(L.oe)}${specific.map(r => p(`${L.codeOE}${r.k}. ${esc(r.o)}`)).join('')}
+${h1('Hipótesis')}
+${h2(L.hg)}${p(`${L.codeH}: ${esc(general.h)}`)}${general.h0 ? p(`${nC}: ${esc(general.h0)}`) : ''}
+${h2(L.he)}${specific.map(r => p(`${L.codeHE}${r.k}: ${esc(r.h)}`) + (r.h0 ? p(`${nC}${r.k}: ${esc(r.h0)}`) : '')).join('')}
+${h1('Variables y dimensiones')}
+${[...m.vis.map(v => [v, false]), [m.vd, true]].map(([v, isVD]) => p(`${v.label}: ${esc(cap(v.bare))}${isCorrS() ? '' : isVD ? ' (variable dependiente)' : ' (variable independiente)'}, con las dimensiones ${esc(joinList(v.dims.map((d, j) => `D${j + 1} ${normCommon(d.name)}`)))}.`)).join('')}
+${p(`Combinación aplicada: ${esc(comboName())}.`)}
+${h1('Definición conceptual de las variables')}
+${operVars().map(({ v, code }) => h2(`${code}: ${esc(cap(normCommon(v.name)))}`) + p(esc(draftDef(v)))).join('')}
+${h1('Método')}
+${method.map(x => h2(x.k) + p(esc(`${x.v.replace(/\.$/, '')}. ${citeWhy(x)}`)) + (x.formula ? p(`Fórmula: ${esc(x.formula)}`) : '')).join('')}
+${h2('Sustento del diseño')}${p(`${esc(D.text)} ${esc(D.cite)}`)}
+${matrixHtml()}
+${operHtml()}
+${h1('Referencias')}
+${refsHtml()}
+</div>`;
+}
+
+/* =========================================================
+   12. WORD (.docx) CON FORMATO APA 7
+   ========================================================= */
+function apaDocx(){
+  const D = window.docx;
+  const { m, A, L, general, specific } = buildMatrix(); const T = buildTitle(); const method = buildMethod();
+  const nC = A.labels.codeH0, corrS = isCorrS();
+  const FONT = 'Times New Roman';
+  const HEX = apaColor().replace('#', '').toUpperCase();
+  const run = (text, o = {}) => new D.TextRun({ text, font:FONT, size:o.size || 24, bold:o.bold, italics:o.italic, color:o.color });
+  const dbl = { line:480, before:0, after:0 };
+  const para = (children, o = {}) => new D.Paragraph({
+    children: typeof children === 'string' ? [run(children, o)] : children,
+    alignment: o.align || D.AlignmentType.LEFT, spacing: dbl,
+    indent: o.hanging ? { left:720, hanging:720 } : o.noIndent ? undefined : { firstLine:720 },
+    keepNext: o.keepNext, pageBreakBefore: o.pageBreak
+  });
+  const H1 = (t, o = {}) => para(t, { bold:true, color:HEX, align:D.AlignmentType.CENTER, noIndent:true, keepNext:true, pageBreak:o.pageBreak });
+  const H2 = t => para(t, { bold:true, color:HEX, noIndent:true, keepNext:true });
+  const labeled = (code, text) => para([run(code, { bold:true }), run(' ' + text)]);
+  const header = () => ({ default: new D.Header({ children:[ new D.Paragraph({ alignment:D.AlignmentType.RIGHT, children:[ new D.TextRun({ children:[D.PageNumber.CURRENT], font:FONT, size:24 }) ] }) ] }) });
+  const margin = { top:1440, right:1440, bottom:1440, left:1440, header:720, footer:720 };
+  const portrait = { page:{ size:{ width:11906, height:16838, orientation:D.PageOrientation.PORTRAIT }, margin } };
+  const landscape = { page:{ size:{ width:11906, height:16838, orientation:D.PageOrientation.LANDSCAPE }, margin } };
+
+  // Portada (trabajo de estudiante APA 7)
+  const C = state.caratula;
+  const fecha = new Date().toLocaleDateString('es-PE', { day:'numeric', month:'long', year:'numeric' });
+  const cover = [ para('', { noIndent:true }), para('', { noIndent:true }), para('', { noIndent:true }),
+    para(T.text, { bold:true, align:D.AlignmentType.CENTER, noIndent:true }), para('', { noIndent:true }),
+    ...[C.estudiantes, C.institucion, C.curso, C.docente].filter(x => clean(x)).map(x => para(clean(x), { align:D.AlignmentType.CENTER, noIndent:true })),
+    para(fecha, { align:D.AlignmentType.CENTER, noIndent:true }) ];
+
+  // Cuerpo
+  const vdesc = (v, isVD) => `${v.label}: ${cap(v.bare)}${corrS ? '' : isVD ? ' (variable dependiente)' : ' (variable independiente)'}, con las dimensiones ${joinList(v.dims.map((d, j) => `D${j + 1} ${normCommon(d.name)}`))}.`;
+  const Dz = A.design[state.nivel];
+  const body = [
+    H1(T.text, { pageBreak:true }),
+    para(`La presente investigación es de enfoque cuantitativo, con ${A.labels.nivel.toLowerCase()} ${state.nivel} y un estudio ${tipoTxt()}, y se sustenta en los planteamientos metodológicos de ${A.shortCite} (${A.year}).`),
+    H1('Formulación del problema'),
+    H2(L.pg), para(general.p),
+    H2(L.pe), ...specific.map(r => labeled(`${L.codePE}${r.k}.`, r.p)),
+    H1('Objetivos'),
+    H2(L.og), para(general.o),
+    H2(L.oe), ...specific.map(r => labeled(`${L.codeOE}${r.k}.`, r.o)),
+    H1('Hipótesis'),
+    H2(L.hg), labeled(`${L.codeH}:`, general.h), ...(general.h0 ? [labeled(`${nC}:`, general.h0)] : []),
+    H2(L.he), ...specific.flatMap(r => [labeled(`${L.codeHE}${r.k}:`, r.h), ...(r.h0 ? [labeled(`${nC}${r.k}:`, r.h0)] : [])]),
+    H1('Variables y dimensiones'),
+    ...m.vis.map(v => para(vdesc(v, false))), para(vdesc(m.vd, true)),
+    para(`Combinación aplicada para los enunciados específicos: ${comboName()}. ${A.comboNote[state.nivel]}`),
+    H1('Definición conceptual de las variables'),
+    ...operVars().flatMap(({ v, code }) => [H2(`${code}: ${cap(normCommon(v.name))}`), para(draftDef(v))]),
+    H1('Método'),
+    ...method.flatMap(x => [H2(x.k), para(`${x.v.replace(/\.$/, '')}. ${citeWhy(x)}`), ...(x.scheme ? [para(`Esquema: ${x.scheme}`)] : []), ...(x.formula ? [para(`Fórmula: ${x.formula}`)] : [])]),
+    H2('Sustento del diseño'), para(`${Dz.text} ${Dz.cite}`)
+  ];
+
+  // Tabla APA (sin líneas verticales)
+  const NONE = { style:D.BorderStyle.NONE, size:0, color:'FFFFFF' }, LINE = { style:D.BorderStyle.SINGLE, size:8, color:HEX };
+  const cp = (parts, align) => new D.Paragraph({ alignment:align || D.AlignmentType.LEFT, spacing:{ line:240, before:0, after:80 }, children: parts.map(([t, b, it, hd]) => run(t, { size:20, bold:b, italic:it, color:hd ? HEX : undefined })) });
+  const cell = (paras, o = {}) => new D.TableCell({ children:paras, rowSpan:o.rowSpan, verticalAlign:o.vc ? D.VerticalAlign.CENTER : D.VerticalAlign.TOP, borders:{ top:o.top ? LINE : NONE, bottom:o.bottom ? LINE : NONE, left:NONE, right:NONE }, margins:{ top:60, bottom:60, left:90, right:90 } });
+  const heads = ['Problemas', 'Objetivos', 'Hipótesis', 'Variables y dimensiones', 'Metodología'];
+  const varParas = [...m.vis.map(v => [v, false]), [m.vd, true]].flatMap(([v, isVD]) => [cp([[`${v.label}: ${cap(v.bare)}`, true], [corrS ? '' : isVD ? ' (dependiente)' : ' (independiente)', false]]), ...v.dims.map((d, j) => cp([[`D${j + 1}: `, true], [cap(normCommon(d.name)), false]]))]);
+  const metParas = method.filter(x => !x.k.startsWith('Análisis')).map(x => cp([[x.k + ': ', true], [x.v, false]]));
+  const n = specific.length, span = n + 2;
+  const rows = [
+    new D.TableRow({ tableHeader:true, children: heads.map(h => cell([cp([[h, true, false, true]], D.AlignmentType.CENTER)], { top:true, bottom:true, vc:true })) }),
+    new D.TableRow({ children:[
+      cell([cp([[L.pg, true]]), cp([[L.codeP + ': ', true], [general.p, false]])]),
+      cell([cp([[L.og, true]]), cp([[L.codeO + ': ', true], [general.o, false]])]),
+      cell([cp([[L.hg, true]]), cp([[L.codeH + ': ', true], [general.h, false]]), ...(general.h0 ? [cp([[nC + ': ', true], [general.h0, false]])] : [])]),
+      cell(varParas, { rowSpan:span, bottom:true }), cell(metParas, { rowSpan:span, bottom:true }) ] }),
+    new D.TableRow({ children:[ cell([cp([[L.pe, true]])]), cell([cp([[L.oe, true]])]), cell([cp([[L.he, true]])]) ] }),
+    ...specific.map((r, i) => new D.TableRow({ cantSplit:true, children:[
+      cell([cp([[`${L.codePE}${r.k}: `, true], [r.p, false]])], { bottom:i === n - 1 }),
+      cell([cp([[`${L.codeOE}${r.k}: `, true], [r.o, false]])], { bottom:i === n - 1 }),
+      cell([cp([[`${L.codeHE}${r.k}: `, true], [r.h, false]]), ...(r.h0 ? [cp([[`${nC}${r.k}: `, true], [r.h0, false]])] : [])], { bottom:i === n - 1 }) ] }))
+  ];
+  const table = new D.Table({ width:{ size:100, type:D.WidthType.PERCENTAGE }, columnWidths:[2650, 2450, 3050, 2600, 3200], rows,
+    borders:{ top:NONE, bottom:NONE, left:NONE, right:NONE, insideHorizontal:NONE, insideVertical:NONE } });
+  const tableSection = [ para([run('Tabla 1', { bold:true })], { noIndent:true, keepNext:true }), para([run('Matriz de consistencia', { italic:true })], { noIndent:true, keepNext:true }), table,
+    para([run('Nota. ', { italic:true }), run(`Elaboración propia con base en ${A.shortCite} (${A.year}). Combinación aplicada: ${comboName()}.`)], { noIndent:true }) ];
+
+  // Tabla 2: operacionalización (formato APA: solo líneas horizontales)
+  const C_ = D.AlignmentType.CENTER;
+  const ov = operVars();
+  const oRows = [ new D.TableRow({ tableHeader:true, children:['Variables', 'Definición conceptual', 'Dimensiones', 'Indicadores'].map(h => cell([cp([[h, true, false, true]], C_)], { top:true, bottom:true, vc:true })) }) ];
+  ov.forEach(({ v, code }, vi) => v.dims.forEach((d, j) => {
+    const lastVar = vi === ov.length - 1, last = lastVar && j === v.dims.length - 1, cells = [];
+    if (j === 0) cells.push(cell([cp([[`${code}: `, true], [cap(normCommon(v.name)), false]], C_)], { rowSpan:v.dims.length, bottom:lastVar, vc:true }),
+                           cell([cp([[draftDef(v), false]], C_)], { rowSpan:v.dims.length, bottom:lastVar, vc:true }));
+    cells.push(cell([cp([[cap(normCommon(d.name)), false]], C_)], { bottom:last, vc:true }),
+               cell(indList(d).map(x => new D.Paragraph({ spacing:{ line:240, before:0, after:20 }, children:[run(x, { size:20 })] })), { bottom:last, vc:true }));
+    oRows.push(new D.TableRow({ cantSplit:true, children:cells }));
+  }));
+  const oTable = new D.Table({ width:{ size:100, type:D.WidthType.PERCENTAGE }, columnWidths:[2230, 3910, 2510, 5308], rows:oRows,
+    borders:{ top:NONE, bottom:NONE, left:NONE, right:NONE, insideHorizontal:NONE, insideVertical:NONE } });
+  tableSection.push(para([run('Tabla 2', { bold:true })], { noIndent:true, keepNext:true, pageBreak:true }), para([run('Operacionalización de variables', { italic:true })], { noIndent:true, keepNext:true }), oTable,
+    para([run('Nota. ', { italic:true }), run('Elaboración propia con base en los autores citados.')], { noIndent:true }));
+
+  const refs = [ H1('Referencias'), ...allRefs().map(r => para(r.map(([t, it]) => run(t, { italic:it })), { hanging:true })) ];
+
+  return new D.Document({
+    creator:'Simulador de Diseño Metodológico', title:T.text, description:'Matriz de consistencia - APA 7',
+    styles:{ default:{ document:{ run:{ font:FONT, size:24 }, paragraph:{ spacing:dbl } } } },
+    sections:[
+      { properties:portrait, headers:header(), children:[...cover, ...body] },
+      { properties:landscape, headers:header(), children:tableSection },
+      { properties:portrait, headers:header(), children:refs }
+    ]
+  });
+}
+function fileName(ext){ return `Matriz_de_consistencia_${state.author}_${state.nivel}.${ext}`; }
+function saveBlob(blob, name){
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+async function downloadWord(){
+  if (window.docx){
+    try {
+      const blob = await window.docx.Packer.toBlob(apaDocx());
+      saveBlob(blob, fileName('docx'));
+      toast('Word descargado con formato APA 7 (Times New Roman 12, doble espacio, sangría 1,27 cm).', 'ok');
+      return;
+    } catch (e){ console.error(e); }
+  }
+  // Respaldo sin conexión: documento Word en HTML con estilos APA
+  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(buildTitle().text)}</title>
+<style>@page WordSection1{size:595.3pt 841.9pt;margin:72pt 72pt 72pt 72pt;} div.WordSection1{page:WordSection1;} body{font-family:'Times New Roman';font-size:12pt;}</style></head>
+<body><div class="WordSection1">${apaHtml()}</div></body></html>`;
+  saveBlob(new Blob(['﻿', html], { type:'application/msword' }), fileName('doc'));
+  toast('Word descargado (modo de respaldo .doc con formato APA).', 'ok');
+}
+
+/* =========================================================
+   FELICITACIONES
+   ========================================================= */
+let cgTimer;
+function showCongrats(){
+  const box = $('congrats');
+  box.innerHTML = `<div class="cg-in relative overflow-hidden rounded-2xl bg-white border border-ink-200 shadow-soft">
+    <div class="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-indigo-700 via-blue-500 to-amber-400"></div>
+    <div class="flex items-start gap-3 pl-5 pr-3 py-4">
+      <span class="cg-glow h-11 w-11 shrink-0 rounded-full bg-amber-50 border border-amber-200 grid place-items-center text-2xl leading-none">😊</span>
+      <div class="min-w-0 flex-1">
+        <p class="font-display font-extrabold text-indigo-900 text-[15px] leading-tight">¡Felicitaciones, lo logró!</p>
+        <p class="text-[12.5px] text-ink-700 mt-1 leading-snug italic">«Toda gran investigación comienza con una buena pregunta, y usted ya formuló la suya.»</p>
+        <p class="text-[12px] text-ink-500 mt-1.5 leading-snug">Su diseño metodológico está listo. Siga adelante con el marco teórico y sus instrumentos: cada avance lo acerca a su meta. ¡Éxitos en su tesis!</p>
+        <div class="flex items-center gap-3 mt-2.5">
+          <button type="button" data-cg="word" class="text-[12px] font-bold text-indigo-700 hover:text-indigo-900 inline-flex items-center gap-1"><i data-lucide="file-text" class="w-3.5 h-3.5"></i>Descargar Word</button>
+          <button type="button" data-cg="close" class="text-[12px] font-semibold text-ink-500 hover:text-ink-800">Cerrar</button>
+        </div>
+      </div>
+      <button type="button" data-cg="close" class="p-1 rounded-md text-ink-400 hover:text-ink-800 hover:bg-ink-50" title="Cerrar"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div class="h-[3px] bg-ink-100"><div class="cg-bar h-full bg-gradient-to-r from-indigo-600 to-amber-400"></div></div>
+  </div>`;
+  box.classList.remove('hidden'); icons();
+  clearTimeout(cgTimer); cgTimer = setTimeout(closeCongrats, 12000);
+}
+function closeCongrats(){ clearTimeout(cgTimer); $('congrats').classList.add('hidden'); }
+$('congrats').addEventListener('click', ev => {
+  const b = ev.target.closest('[data-cg]'); if (!b) return;
+  if (b.dataset.cg === 'word') downloadWord();
+  if (b.dataset.cg === 'ver') $('results').scrollIntoView({ behavior:'smooth', block:'start' });
+  closeCongrats();
+});
+
+/* =========================================================
+   13. ALERTAS
+   ========================================================= */
+let toastTimer;
+function toast(msg, kind){
+  const t = $('toast'), ok = kind === 'ok';
+  t.innerHTML = `<div class="toast-enter flex items-center gap-2 px-4 py-3 rounded-xl shadow-soft text-sm font-semibold ${ok ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}"><i data-lucide="${ok ? 'check-circle-2' : 'alert-triangle'}" class="w-4 h-4"></i>${esc(msg)}</div>`;
+  t.classList.remove('hidden'); icons();
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add('hidden'), 3400);
+}
+function showAlert(errors){
+  const keys = Object.keys(errors), box = $('alertBox');
+  if (!keys.length){ box.classList.add('hidden'); box.innerHTML = ''; return; }
+  box.innerHTML = `<div role="alert" class="rounded-2xl border-2 border-red-300 bg-red-50 p-3 flex gap-3 fade-in">
+    <span class="h-9 w-9 shrink-0 rounded-xl bg-red-500 text-white grid place-items-center"><i data-lucide="shield-alert" class="w-5 h-5"></i></span>
+    <div class="min-w-0 flex-1"><p class="font-display font-bold text-red-800 text-sm">No se puede generar el proyecto: ${keys.length} campo${keys.length > 1 ? 's' : ''} pendiente${keys.length > 1 ? 's' : ''}</p>
+      <p class="text-xs text-red-700 mt-0.5">Ningún campo puede quedar vacío. Los campos faltantes están marcados en rojo.</p>
+      <div class="flex flex-wrap gap-1.5 mt-2">${keys.slice(0, 6).map(k => `<button type="button" data-goto="${k}" class="text-[11px] font-semibold px-2 py-1 rounded-lg bg-white border border-red-200 text-red-700 hover:bg-red-100">Paso ${stepOf(k)} · ${esc(fieldLabel(k))}</button>`).join('')}${keys.length > 6 ? `<span class="text-[11px] text-red-700 px-1 py-1">+${keys.length - 6} más</span>` : ''}</div></div>
+    <button type="button" id="btnCloseAlert" class="text-red-400 hover:text-red-700 self-start"><i data-lucide="x" class="w-5 h-5"></i></button></div>`;
+  box.classList.remove('hidden'); icons();
+}
+function gotoField(key){
+  state.step = stepOf(key); renderForm();
+  setTimeout(() => {
+    const el = document.querySelector(`[data-key="${CSS.escape(key)}"]`) || $('grp-' + key);
+    if (el){ el.scrollIntoView({ behavior:'smooth', block:'center' }); if (el.focus) el.focus({ preventScroll:true }); }
+  }, 60);
+}
+
+/* =========================================================
+   14. EVENTOS
+   ========================================================= */
+function getPath(path){ return path.split('.').reduce((o, k) => o[k], state); }
+function setPath(path, val){ const ks = path.split('.'), last = ks.pop(); ks.reduce((o, k) => o[k], state)[last] = val; }
+function afterChange(){
+  updateLive();
+  if (state.generated && !Object.keys(validateAll()).length) renderResults();
+}
+function refreshComboCounts(){
+  if (state.step !== 3) return;
+  const g = $('grp-combo'); if (!g) return;
+  g.querySelectorAll('[data-value]').forEach(b => { const s = b.querySelector('.text-indigo-700'); if (s) s.textContent = `${pairs(b.dataset.value).length} específicos`; });
+}
+
+$('stepBody').addEventListener('input', ev => {
+  const el = ev.target, path = el.dataset.bind; if (!path) return;
+  const prev = String(getPath(path) ?? '');
+  setPath(path, el.value);
+  if (['pob', 'org', 'lugar', 'anio'].includes(path)) refreshOrg();
+  const ob = path.match(/^(vis\.\d+|vd)\.(def|src|dims\.\d+\.ind)/);
+  if (ob) updateOperLive(ob[1]);
+  if (/\.rtipo$/.test(path)){ renderForm(); const sel = document.querySelector(`[data-bind="${path}"]`); if (sel) sel.closest('details').open = true; return; }
+  else if (path.endsWith('.name')) updatePreview(path.replace(/\.name$/, ''));
+  const key = el.dataset.key;
+  if (key && state.errors[key]){
+    delete state.errors[key]; el.classList.remove('has-error');
+    const msg = document.querySelector(`[data-err="${CSS.escape(key)}"]`); if (msg) msg.remove();
+    renderStepper();
+    if (!Object.keys(state.errors).length) showAlert({});
+  }
+  if (state.errors.title){ delete state.errors.title; const g = $('grp-title'); if (g){ g.className = 'rounded-2xl border border-ink-200 bg-ink-50 p-3.5'; const msg = document.querySelector('[data-err="title"]'); if (msg) msg.remove(); } }
+  afterChange();
+});
+
+$('stepBody').addEventListener('click', ev => {
+  const t = ev.target.closest('button'); if (!t) return;
+  if (t.dataset.set){ setPath(t.dataset.set, t.dataset.val); delete state.errors[t.dataset.set.replace(/\.citaForma$/, '.citaTipo')]; renderForm(); afterChange(); return; }
+  if (t.dataset.addSrc){ const v = getPath(t.dataset.addSrc); if (v.src.length < MAX_SRC) v.src.push(newSrc()); renderForm(); return; }
+  if (t.dataset.removeSrc){ const [pp, k] = t.dataset.removeSrc.split('|'); const v = getPath(pp); if (v.src.length > 1) v.src.splice(+k, 1); Object.keys(state.errors).forEach(x => { if (x.startsWith(pp + '.src') || x === pp + '.citaTipo') delete state.errors[x]; }); renderForm(); afterChange(); return; }
+  if (t.dataset.tab){ state.tab = t.dataset.tab; $('stmtBox').innerHTML = renderStatements(); icons(); return; }
+  if (t.dataset.guide){
+    state.guide = state.guide === t.dataset.guide ? null : t.dataset.guide; renderForm();
+    if (state.guide) setTimeout(() => { const g = $('guidePanel'); if (g) window.scrollTo({ top: g.getBoundingClientRect().top + window.scrollY - 190, behavior:'smooth' }); }, 60);
+    return;
+  }
+  if (t.dataset.author){ state.author = t.dataset.author; delete state.errors.author; renderAuthorCard(); renderForm(); afterChange(); return; }
+  if (t.dataset.choice){
+    const g = t.dataset.choice, v = t.dataset.value;
+    state[g] = v; delete state.errors[g];
+    if (g === 'tipo'){
+      if (v === 'bivariada') state.vis = state.vis.slice(0, 1);
+      else while (state.vis.length < MIN_VI_MULTI) state.vis.push(newVar());
+      Object.keys(state.errors).forEach(k => { if (k.startsWith('vis.')) delete state.errors[k]; });
+    }
+    if ((g === 'tipo' || g === 'nivel') && !comboOptions().some(o => o.id === state.combo)) state.combo = 'dimVI_VD';
+    renderAuthorCard(); renderForm(); afterChange(); return;
+  }
+  if (t.id === 'btnAddVI'){ state.vis.push(newVar()); renderForm(); afterChange(); return; }
+  if (t.dataset.removeVi !== undefined){
+    state.vis.splice(+t.dataset.removeVi, 1);
+    Object.keys(state.errors).forEach(k => { if (k.startsWith('vis.')) delete state.errors[k]; });
+    renderForm(); afterChange(); return;
+  }
+  if (t.dataset.addDim){ const v = getPath(t.dataset.addDim); if (v.dims.length < MAX_DIMS) v.dims.push(newDim()); delete state.errors.combo; renderForm(); afterChange(); return; }
+  if (t.dataset.removeDim){
+    const [p, j] = t.dataset.removeDim.split('|'), v = getPath(p);
+    if (v.dims.length > MIN_DIMS) v.dims.splice(+j, 1);
+    Object.keys(state.errors).forEach(k => { if (k.startsWith(p + '.dims')) delete state.errors[k]; });
+    delete state.errors.combo;
+    renderForm(); afterChange(); return;
+  }
+});
+
+$('stepper').addEventListener('click', ev => { const b = ev.target.closest('[data-step]'); if (b){ state.step = +b.dataset.step; renderForm(); } });
+$('btnPrev').onclick = () => { if (state.step > 1){ state.step--; renderForm(); window.scrollTo({ top:0, behavior:'smooth' }); } };
+$('btnNext').onclick = () => {
+  const e = validateStep(state.step);
+  if (Object.keys(e).length){
+    Object.assign(state.errors, e); renderForm();
+    toast('Complete los campos marcados en rojo para continuar.', 'err');
+    setTimeout(() => gotoField(Object.keys(e)[0]), 30);
+    return;
+  }
+  state.step = Math.min(STEPS.length, state.step + 1); renderForm(); window.scrollTo({ top:0, behavior:'smooth' });
+};
+$('btnGenerate').onclick = () => {
+  const e = validateAll(); state.errors = e;
+  if (Object.keys(e).length){
+    state.generated = false; renderResults(); showAlert(e);
+    toast('Generación bloqueada: hay campos vacíos o inválidos.', 'err');
+    gotoField(Object.keys(e)[0]); return;
+  }
+  showAlert({}); state.generated = true; renderForm(); renderResults();
+  setView('final');
+  setTimeout(showCongrats, 450);
+};
+$('alertBox').addEventListener('click', ev => {
+  const g = ev.target.closest('[data-goto]'); if (g) gotoField(g.dataset.goto);
+  if (ev.target.closest('#btnCloseAlert')) showAlert({});
+});
+$('authorCard').addEventListener('click', async ev => {
+  if (ev.target.closest('#btnCopyRef')){ await copyText(AUTHORS[state.author].apaPlain); toast('Referencia APA copiada.', 'ok'); }
+});
+$('results').addEventListener('click', ev => { const b = ev.target.closest('[data-copy]'); if (b) copyBlock(b.dataset.copy); });
+$('results').addEventListener('input', ev => {
+  const k = ev.target.dataset.cara; if (k) state.caratula[k] = ev.target.value;
+});
+let limitTimer = 0;
+function limitReached(el){
+  el.classList.add('has-error'); setTimeout(() => el.classList.remove('has-error'), 900);
+  if (Date.now() - limitTimer > 2500){ limitTimer = Date.now(); toast('Límite alcanzado: el título ya tiene 20 palabras y no admite más.', 'err'); }
+}
+function askConfirm(title, msg, okText, onOk){
+  const box = $('confirmBox');
+  box.innerHTML = `<div class="fade-in w-full max-w-sm rounded-3xl bg-white shadow-2xl p-6 text-center">
+    <div class="mx-auto h-12 w-12 rounded-2xl bg-red-50 text-red-600 grid place-items-center"><i data-lucide="rotate-ccw" class="w-6 h-6"></i></div>
+    <p class="font-display font-extrabold text-ink-900 text-lg mt-3">${title}</p>
+    <p class="text-sm text-ink-600 mt-1 leading-relaxed">${msg}</p>
+    <div class="mt-5 grid grid-cols-2 gap-2">
+      <button type="button" data-cf="no" class="text-sm font-bold px-4 py-2.5 rounded-xl border border-ink-200 text-ink-700 hover:bg-ink-50">Cancelar</button>
+      <button type="button" data-cf="ok" class="text-sm font-bold px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white">${okText}</button>
+    </div></div>`;
+  box.classList.remove('hidden'); icons();
+  box.onclick = ev => {
+    const b = ev.target.closest('[data-cf]');
+    if (ev.target === box || (b && b.dataset.cf === 'no')){ box.classList.add('hidden'); return; }
+    if (b && b.dataset.cf === 'ok'){ box.classList.add('hidden'); onOk(); }
+  };
+}
+function resetAll(){
+  state = initialState();
+  $('congrats').classList.add('hidden'); showAlert({});
+  renderAll();
+  $('stepBody').scrollTop = 0; window.scrollTo({ top:0, behavior:'smooth' });
+  toast('Se reinició todo. Puede comenzar un nuevo proyecto.', 'ok');
+}
+$('btnReset').onclick = () => askConfirm('¿Reiniciar todo?', 'Se borrarán el autor, la tituladora, las variables y los resultados generados.', 'Sí, reiniciar', resetAll);
+$('btnExample').onclick = () => {
+  const keep = { author:state.author, nivel:state.nivel || 'correlacional', tipo:state.tipo || 'bivariada', caratula:state.caratula };
+  state = initialState(); Object.assign(state, keep);
+  const mk = (name, dims, def, src) => ({ name, def, citaTipo:'parafrasis', citaForma:'parentetica', src:[Object.assign(newSrc(), src)], dims:dims.map(([d, ind]) => ({ name:d, ind, items:3 })) });
+  state.vis = [ mk('Liderazgo transformacional', [
+      ['Influencia idealizada', 'Admiración hacia el líder\nConfianza\nRespeto'],
+      ['Motivación inspiradora', 'Visión compartida\nEntusiasmo del equipo\nExpectativas altas'],
+      ['Estimulación intelectual', 'Creatividad\nResolución de problemas\nPensamiento crítico']],
+      'estilo de liderazgo en el que el líder motiva a sus seguidores a ir más allá de sus intereses personales en beneficio del grupo y de la organización',
+      { autores:'Bass, B. M.', anio:'1985', titulo:'Leadership and performance beyond expectations', fuente:'Free Press' }) ];
+  if (state.tipo === 'multivariada') state.vis.push(mk('Clima organizacional', [
+      ['Comunicación interna', 'Claridad de la información\nFluidez\nRetroalimentación'],
+      ['Trabajo en equipo', 'Cooperación\nCoordinación\nApoyo mutuo'],
+      ['Reconocimiento', 'Valoración del esfuerzo\nIncentivos\nFelicitación']],
+      'conjunto de propiedades medibles del ambiente de trabajo, percibidas directa o indirectamente por las personas, que influyen en su motivación y comportamiento',
+      { autores:'Litwin, G. H.; Stringer, R. A.', anio:'1968', titulo:'Motivation and organizational climate', fuente:'Harvard University Press' }));
+  state.vd = mk('Desempeño laboral', [
+      ['Productividad', 'Cumplimiento de metas\nUso eficiente del tiempo\nVolumen de trabajo'],
+      ['Calidad del servicio', 'Precisión\nAtención al cliente\nCumplimiento de estándares'],
+      ['Compromiso', 'Identificación con la organización\nResponsabilidad\nPermanencia']],
+      'comportamiento del trabajador en la búsqueda de los objetivos fijados, que constituye su estrategia individual para lograrlos',
+      { autores:'Chiavenato, I.', anio:'2009', titulo:'Gestión del talento humano (3.ª ed.)', fuente:'McGraw-Hill Interamericana' });
+  state.pob = 'trabajadores'; state.N = '86'; state.org = 'Hotel El Tumi'; state.lugar = 'Huaraz'; state.anio = '2026';
+  state.step = state.author ? 3 : 1;
+  showAlert({}); renderAll();
+  toast(state.author ? 'Ejemplo cargado. Revise y pulse «Generar proyecto».' : 'Ejemplo cargado. Elija un autor para continuar.', 'ok');
+};
+
+$('btnEdit').onclick = () => setView('steps');
+$('btnFinal').onclick = () => { renderResults(); setView('final'); };
+$('palettePanel').addEventListener('click', ev => {
+  const b = ev.target.closest('[data-pal]'); if (!b) return;
+  const v = b.dataset.pal;
+  if (v === 'open'){ paletteOpen = true; renderPalette(); return; }
+  if (v === 'close'){ paletteOpen = false; renderPalette(); return; }
+  setTheme(v);
+});
+if (window.ResizeObserver) new ResizeObserver(() => fitSheet()).observe($('sheetWrap'));
+applyTheme(uiTheme);
+renderPalette();
+function renderAll(){ renderAuthorCard(); renderForm(); renderResults(); }
+renderAll();
+</script>
+</body>
+</html>
